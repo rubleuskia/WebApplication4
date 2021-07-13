@@ -8,6 +8,7 @@
       <ProjectReference Include="..\Accounting\Accounting.csproj" />
       <ProjectReference Include="..\Common\Common.csproj" />
       <ProjectReference Include="..\Currencies\Currencies.csproj" />
+      <ProjectReference Include="..\TelegramBotApp\TelegramBotApp.csproj" />
     </ItemGroup>
 
     <ItemGroup>
