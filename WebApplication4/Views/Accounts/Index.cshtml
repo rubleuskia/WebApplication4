@@ -17,18 +17,27 @@
 </section>
 
 <div class="container">
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      @foreach (var account in Model)
-      {
-          <div class="card">
-              <h5 class="card-header">Account (@account.Id) </h5>
-              <div class="card-body">
-                  <h5 class="card-title">@account.Amount.ToString("F3")</h5>
-                  <p class="card-text">@account.CurrencyName</p>
-                  <a class="btn btn-primary">Acquire</a>
-                  <a class="btn btn-primary">Withdraw</a>
-              </div>
-          </div>
-      }
-  </div>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        @foreach (var account in Model)
+        {
+            <div class="card">
+                <h5 class="card-header">Account (@account.Id) </h5>
+                <div class="card-body">
+                    <h5 class="card-title">@account.Amount.ToString("F3")</h5>
+                    <p class="card-text">@account.CurrencyName</p>
+                    <a asp-action="Acquire" asp-route-id="@account.Id" class="btn btn-primary">Acquire</a>
+                    <a class="btn btn-primary">Withdraw</a>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+@* // 1. create view - Acquire  *@
+@* // 2. view: account ID, amount, input amount, submit, back  *@
+@* // 3. method in controller - Acquire *@
+@* // 4. asp-action="Acquire" + asp-route-id="@user.Id"   *@
+@* // 5. update view model  *@
+@* // 5. http post + logic  *@
+
+@* _acquiringService *@

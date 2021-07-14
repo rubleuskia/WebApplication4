@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Accounting;
+using Accounting.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Serilog;
@@ -20,6 +21,12 @@ namespace WebApplication4.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var id1 = await _managementService.CreateAccount(Guid.Empty, "BYN");
+            await _managementService.Acquire(id1, 1000);
+
+            var id2 = await _managementService.CreateAccount(Guid.Empty, "RUB");
+            await _managementService.Acquire(id2, 1000);
+
             var accounts = await _managementService.GetAccounts();
             var viewModels = accounts.Select(x => new AccountViewModel
             {
@@ -31,6 +38,7 @@ namespace WebApplication4.Controllers
             return View(viewModels);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View(new AccountViewModel
@@ -58,6 +66,31 @@ namespace WebApplication4.Controllers
             await _managementService.Acquire(accountId, model.Amount);
 
             Log.Information($"Account with ID: {accountId} created");
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Acquire(Guid id)
+        {
+            var account = await _managementService.GetAccount(id);
+            return View(new AccountViewModel
+            {
+                Amount = account.Amount,
+                Id = account.Id,
+                InputAmount = 0,
+                CurrencyCharCode = account.CurrencyCharCode
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PerformAcquire(AccountViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            await _managementService.Acquire(model.Id, model.InputAmount);
             return RedirectToAction("Index");
         }
 
@@ -94,17 +127,22 @@ namespace WebApplication4.Controllers
                 return View("Transfer", model);
             }
 
-            // TODO
-            // 1. ensure enough money
-            // 2. ?
-
-            await _managementService.Transfer(new AccountTransferParameters
+            try
             {
-                Amount = model.Amount,
-                FromAccount = model.From.Value,
-                ToAccount = model.To.Value,
-                CurrencyCharCode = model.CurrencyCharCode,
-            });
+                await _managementService.Transfer(new AccountTransferParameters
+                {
+                    Amount = model.Amount,
+                    FromAccount = model.From.Value,
+                    ToAccount = model.To.Value,
+                    CurrencyCharCode = model.CurrencyCharCode,
+                });
+            }
+            catch (NotEnoughMoneyToWithdrawException ex)
+            {
+                Log.Error(ex, "Error occured during transfer operation.");
+                ModelState.AddModelError("Amount", $"Not enough money on account {ex.AccountId}: current amount - {ex.OriginalAmount}.");
+                return View("Transfer", model);
+            }
 
             return RedirectToAction("Index");
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Accounting.Exceptions;
 using Common;
 using Common.Accounting;
 
@@ -25,7 +26,12 @@ namespace Accounting
 
             if (account.Amount < amount)
             {
-                throw new InvalidOperationException("Not enough money.");
+                throw new NotEnoughMoneyToWithdrawException("Not enough money.")
+                {
+                    Amount = amount,
+                    AccountId = accountId,
+                    OriginalAmount = account.Amount,
+                };
             }
 
             account.Amount -= amount;

@@ -1,0 +1,5 @@
+2021-07-14 19:19:14.001 +03:00 [ERR] Error occured during transfer operation.
+Accounting.Exceptions.NotEnoughMoneyToWithdrawException: Not enough money.
+   at Accounting.AccountAcquiringService.Withdraw(Guid accountId, Decimal amount) in /Users/alekseyrublevsky/Documents/dev/TmsProjects/Sandbox/WebApplication4/Accounting/AccountAcquiringService.cs:line 29
+   at Accounting.AccountTransferService.Transfer(AccountTransferParameters parameters) in /Users/alekseyrublevsky/Documents/dev/TmsProjects/Sandbox/WebApplication4/Accounting/AccountTransferService.cs:line 43
+   at WebApplication4.Controllers.AccountsController.PerformTransfer(TransferViewModel model) in /Users/alekseyrublevsky/Documents/dev/TmsProjects/Sandbox/WebApplication4/WebApplication4/Controllers/AccountsController.cs:line 106
