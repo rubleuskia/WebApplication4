@@ -16,12 +16,12 @@
   </div>
 </section>
 
-<div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        @foreach (var account in Model)
-        {
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 p-0 m-0">
+    @foreach (var account in Model)
+    {
+        <div class="col-3">
             <div class="card">
-                <h5 class="card-header">Account (@account.Id) </h5>
+                <h5 class="card-header">Account (@account.Id)</h5>
                 <div class="card-body">
                     <h5 class="card-title">@account.Amount.ToString("F3")</h5>
                     <p class="card-text">@account.CurrencyName</p>
@@ -29,9 +29,10 @@
                     <a class="btn btn-primary">Withdraw</a>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
+
 
 @* // 1. create view - Acquire  *@
 @* // 2. view: account ID, amount, input amount, submit, back  *@

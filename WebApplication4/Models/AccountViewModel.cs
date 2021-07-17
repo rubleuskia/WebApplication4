@@ -14,11 +14,11 @@ namespace WebApplication4.Models
         public string CurrencyCharCode { get; set; }
 
         [Required]
-        [Range(1, 1000000)]
+        [Range(0, 1000000)]
         public decimal Amount { get; set; }
 
         [Required]
-        [Range(1, 1000000)]
+        [Range(0, 1000000)]
         public decimal InputAmount { get; set; }
 
         public SelectListItem[] AvailableCharCodes { get; set; }

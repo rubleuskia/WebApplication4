@@ -28,6 +28,11 @@ namespace TelegramBot
 
         public Task StartAsync(string apiKey)
         {
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                return Task.CompletedTask;
+            }
+
             _botClient = new TelegramBotClient(apiKey);
 
             _cancellationTokenSource = new CancellationTokenSource();
@@ -42,8 +47,8 @@ namespace TelegramBot
 
         public Task StopAsync()
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
             return Task.CompletedTask;
         }
 

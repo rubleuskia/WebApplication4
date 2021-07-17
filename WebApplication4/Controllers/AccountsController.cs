@@ -52,7 +52,7 @@ namespace WebApplication4.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
             if (!_managementService.IsSupportCurrencyCharCode(model.CurrencyCharCode))
