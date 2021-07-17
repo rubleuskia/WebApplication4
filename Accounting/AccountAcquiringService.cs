@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Accounting.DataAccess;
 using Accounting.Exceptions;
 using Common;
 using Common.Accounting;
@@ -35,6 +36,7 @@ namespace Accounting
             }
 
             account.Amount -= amount;
+            await _accountsRepository.Update(account);
             _eventBus.Publish(new AccountWithdrawEvent
             {
                 AccountId = accountId,
@@ -46,7 +48,7 @@ namespace Accounting
         {
             var account = await _accountsRepository.GetById(accountId);
             account.Amount += amount;
-
+            await _accountsRepository.Update(account);
             _eventBus.Publish(new AccountAcquiredEvent
             {
                 AccountId = accountId,

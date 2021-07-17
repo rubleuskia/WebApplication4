@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Accounting.DataAccess\Accounting.DataAccess.csproj" />
       <ProjectReference Include="..\Common\Common.csproj" />
       <ProjectReference Include="..\Currencies\Currencies.csproj" />
     </ItemGroup>
