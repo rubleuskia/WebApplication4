@@ -1,4 +1,4 @@
-@model User;
+@model DataAccess.Entities.ApplicationUser;
 
 <div class="container">
   <div class="row">
@@ -6,15 +6,22 @@
       <fieldset disabled>
         <legend>User details</legend>
         <div class="mb-3">
-          <label for="name-input" class="form-label">Name</label>
-          <input type="text" value="@Model.Name" id="name-input" class="form-control" placeholder="Name">
+          <label for="UserName-input" class="form-label">Name</label>
+          <input type="text" value="@Model.UserName" id="UserName-input" class="form-control" placeholder="Name">
         </div>
         <div class="mb-3">
-          <label for="age-input" class="form-label">Age</label>
-          <input type="text" value="@Model.Age" id="age-input" class="form-control" placeholder="Age">
+          <label for="Email-input" class="form-label">Name</label>
+          <input type="text" value="@Model.Email" id="Email-input" class="form-control" placeholder="Email">
+        </div>
+        <div class="mb-3">
+          <label for="PhoneNumber-input" class="form-label">Name</label>
+          <input type="text" value="@Model.PhoneNumber" id="PhoneNumberinput" class="form-control" placeholder="PhoneNumber">
+        </div>
+        <div class="mb-3">
+          <label id="Age-input" class="form-label">Age</label>
+          <input type="text" value="@Model.Age" id="Age-input" class="form-control" placeholder="Age">
         </div>
       </fieldset>
-      <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a>
       <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </form>
   </div>
