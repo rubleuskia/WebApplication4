@@ -61,9 +61,9 @@ namespace Accounting
             return _accountsRepository.GetById(accountId);
         }
 
-        public Task<Account[]> GetAccounts()
+        public async Task<Account[]> GetAccounts(Guid userId)
         {
-            return _accountsRepository.GetAll();
+            return (await _accountsRepository.GetAll()).Where(x => x.UserId == userId).ToArray();
         }
 
         public bool IsSupportCurrencyCharCode(string currencyCharCode)

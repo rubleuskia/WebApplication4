@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataAccess.Entities
 {
@@ -9,6 +10,7 @@ namespace DataAccess.Entities
 
         public string CurrencyCharCode { get; set; }
 
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Amount { get; set; }
 
         public Guid UserId { get; set; }

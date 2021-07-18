@@ -7,25 +7,24 @@
         <form method="post" asp-action="Register">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <fieldset>
-                <legend>User details</legend>
                 <div class="mb-3">
                     <label for="Email-input" class="form-label">Email</label>
-                    <input asp-for="Email" type="text" id="Email-input" class="form-control" placeholder="Email">
+                    <input asp-for="Email" type="email" id="Email-input" class="form-control" placeholder="Email">
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label for="Age-input" class="form-label">Age</label>
-                    <input asp-for="Age" type="text" id="Age-input" class="form-control" placeholder="Age">
+                    <input asp-for="Age" type="number" id="Age-input" class="form-control" placeholder="Age">
                     <span asp-validation-for="Age" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label for="Password-input" class="form-label">Password</label>
-                    <input asp-for="Password" type="text" id="Password-input" class="form-control" placeholder="Password">
+                    <input asp-for="Password" type="password" id="Password-input" class="form-control" placeholder="Password">
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label for="PasswordConfirm-input" class="form-label">Confirm password</label>
-                    <input asp-for="PasswordConfirm" type="text" id="PasswordConfirm-input" class="form-control" placeholder="Confirm Password">
+                    <input asp-for="PasswordConfirm" type="password" id="PasswordConfirm-input" class="form-control" placeholder="Confirm Password">
                     <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
                 </div>
             </fieldset>

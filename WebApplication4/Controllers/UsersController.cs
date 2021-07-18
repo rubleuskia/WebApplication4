@@ -1,11 +1,12 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using DataAccess.Contexts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication4.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly ApplicationContext _context;
@@ -22,14 +23,14 @@ namespace WebApplication4.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details([Range(1, int.MaxValue)]Guid id)
+        public IActionResult Details(Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var user = _context.Users.SingleOrDefault(x => x.Id == id);
+            var user = _context.Users.SingleOrDefault(x => x.Id == id.ToString());
             if (user == null)
             {
                 return BadRequest();

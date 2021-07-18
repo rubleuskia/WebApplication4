@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Accounting;
 using Accounting.Exceptions;
+using DataAccess.Contexts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Serilog;
@@ -10,18 +12,22 @@ using WebApplication4.Models;
 
 namespace WebApplication4.Controllers
 {
+    [Authorize]
     public class AccountsController : Controller
     {
+        private readonly ApplicationContext _context;
         private readonly IAccountManagementService _managementService;
 
-        public AccountsController(IAccountManagementService managementService)
+        public AccountsController(IAccountManagementService managementService, ApplicationContext context)
         {
             _managementService = managementService;
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            var accounts = await _managementService.GetAccounts();
+            var user = _context.Users.Single(x => x.UserName == User.Identity.Name);
+            var accounts = await _managementService.GetAccounts(user.UserId);
             var viewModels = accounts.Select(x => new AccountViewModel
             {
                 Id = x.Id,
@@ -56,7 +62,8 @@ namespace WebApplication4.Controllers
                 return View("Create", model);
             }
 
-            var accountId = await _managementService.CreateAccount(Guid.Empty, model.CurrencyCharCode);
+            var user = _context.Users.Single(x => x.UserName == User.Identity.Name);
+            var accountId = await _managementService.CreateAccount(user.UserId,  model.CurrencyCharCode);
             await _managementService.Acquire(accountId, model.Amount);
 
             Log.Information($"Account with ID: {accountId} created");
@@ -90,7 +97,8 @@ namespace WebApplication4.Controllers
 
         public async Task<IActionResult> Transfer()
         {
-            var accounts = await _managementService.GetAccounts();
+            var user = _context.Users.Single(x => x.UserName == User.Identity.Name);
+            var accounts = await _managementService.GetAccounts(user.UserId);
 
             return View(new TransferViewModel
             {
@@ -110,7 +118,9 @@ namespace WebApplication4.Controllers
 
             if (model.From == model.To)
             {
-                var accounts = await _managementService.GetAccounts();
+
+                var user = _context.Users.Single(x => x.UserName == User.Identity.Name);
+                var accounts = await _managementService.GetAccounts(user.UserId);
 
                 ModelState.AddModelError("To", "Cannot transfer money to the same account.");
                 // TODO into common method

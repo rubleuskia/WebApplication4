@@ -18,7 +18,7 @@ namespace Accounting
 
         Task<Account> GetAccount(Guid accountId);
 
-        Task<Account[]> GetAccounts();
+        Task<Account[]> GetAccounts(Guid userId);
 
         bool IsSupportCurrencyCharCode(string currencyCharCode);
     }

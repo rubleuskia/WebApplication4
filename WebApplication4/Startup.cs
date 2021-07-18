@@ -1,4 +1,3 @@
-using System;
 using DataAccess.Contexts;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Builder;
@@ -32,7 +31,8 @@ namespace WebApplication4
             // Microsoft.EntityFrameworkCore.Design
             // dotnet ef migrations add InitialMigration --project ../DataAccess
             // dotnet ef database update
-            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>().AddEntityFrameworkStores<ApplicationContext>();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
