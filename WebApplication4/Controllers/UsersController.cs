@@ -1,7 +1,10 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DataAccess.Contexts;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication4.Controllers
@@ -9,11 +12,13 @@ namespace WebApplication4.Controllers
     [Authorize]
     public class UsersController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationContext _context;
 
-        public UsersController(ApplicationContext context)
+        public UsersController(ApplicationContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -23,7 +28,7 @@ namespace WebApplication4.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
             if (!ModelState.IsValid)
             {
