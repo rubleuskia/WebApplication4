@@ -1,11 +1,12 @@
-﻿using Accounting.DataAccess.Entities;
+﻿using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Accounting.DataAccess.Contexts
+namespace DataAccess.Contexts
 {
     public sealed class ApplicationContext : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)

@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Accounting.DataAccess;
-using Accounting.DataAccess.Entities;
+using DataAccess.Entities;
 
 namespace Accounting
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Accounting.DataAccess.Entities
+namespace DataAccess.Entities
 {
     public class Account
     {

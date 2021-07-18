@@ -1,7 +1,5 @@
 using System;
 using Accounting;
-using Accounting.DataAccess;
-using Accounting.DataAccess.Contexts;
 using Accounting.Tracking;
 using Common;
 using Currencies.Apis.Byn;
@@ -10,6 +8,7 @@ using Currencies.Common;
 using Currencies.Common.Caching;
 using Currencies.Common.Conversion;
 using Currencies.Common.Infos;
+using DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +22,10 @@ namespace WebApplication4.Extensions
         public static void RegisterEntityFramework(this IServiceCollection services, IConfiguration configuration)
         {
             string connection = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<ApplicationContext>(options =>
+            {
+                options.UseSqlServer(connection, x => x.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName));
+            });
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)

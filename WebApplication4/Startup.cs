@@ -1,5 +1,9 @@
+using System;
+using DataAccess.Contexts;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +27,13 @@ namespace WebApplication4
             services.RegisterOptions(Configuration);
             services.RegisterEntityFramework(Configuration);
             services.AddHostedService<TelegramHostedService>();
+
+            // dotnet tool install --global dotnet-ef
+            // Microsoft.EntityFrameworkCore.Design
+            // dotnet ef migrations add InitialMigration --project ../DataAccess
+            // dotnet ef database update
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>().AddEntityFrameworkStores<ApplicationContext>();
+
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddControllersWithViews();
         }
@@ -46,6 +57,7 @@ namespace WebApplication4
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

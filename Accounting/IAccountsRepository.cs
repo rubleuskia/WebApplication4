@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Accounting.DataAccess.Entities;
+using DataAccess.Entities;
 
-namespace Accounting.DataAccess
+namespace Accounting
 {
     public interface IAccountsRepository
     {

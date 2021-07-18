@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Accounting.DataAccess.Contexts;
-using Accounting.DataAccess.Entities;
+using DataAccess.Contexts;
+using DataAccess.Entities;
 
-namespace Accounting.DataAccess
+namespace Accounting
 {
     public class AccountsRepository : IAccountsRepository
     {

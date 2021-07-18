@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Currencies", "Currencies\Cu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot", "TelegramBot\TelegramBot.csproj", "{E7DB4210-E282-4DAF-8AA2-C2580CFC919A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounting.DataAccess", "Accounting.DataAccess\Accounting.DataAccess.csproj", "{F7F607FA-EC1F-4890-9B10-AFE6332955C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{8F1CA73A-1054-4E56-B081-91E493CF985A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,9 +38,9 @@ Global
 		{E7DB4210-E282-4DAF-8AA2-C2580CFC919A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7DB4210-E282-4DAF-8AA2-C2580CFC919A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7DB4210-E282-4DAF-8AA2-C2580CFC919A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7F607FA-EC1F-4890-9B10-AFE6332955C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7F607FA-EC1F-4890-9B10-AFE6332955C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7F607FA-EC1F-4890-9B10-AFE6332955C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7F607FA-EC1F-4890-9B10-AFE6332955C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F1CA73A-1054-4E56-B081-91E493CF985A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F1CA73A-1054-4E56-B081-91E493CF985A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F1CA73A-1054-4E56-B081-91E493CF985A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F1CA73A-1054-4E56-B081-91E493CF985A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

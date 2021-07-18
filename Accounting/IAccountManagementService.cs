@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Accounting.DataAccess.Entities;
+using DataAccess.Entities;
 
 namespace Accounting
 {
@@ -17,7 +17,9 @@ namespace Accounting
         Task Transfer(AccountTransferParameters parameters);
 
         Task<Account> GetAccount(Guid accountId);
+
         Task<Account[]> GetAccounts();
+
         bool IsSupportCurrencyCharCode(string currencyCharCode);
     }
 }
