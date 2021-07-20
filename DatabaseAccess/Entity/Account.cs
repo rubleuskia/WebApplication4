@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Accounting
+namespace DatabaseAccess.Entity
 {
     public class Account
     {
-        // global unique identifier
         public Guid Id { get; set; }
 
         public string CurrencyCharCode { get; set; }

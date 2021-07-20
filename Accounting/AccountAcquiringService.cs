@@ -35,6 +35,8 @@ namespace Accounting
             }
 
             account.Amount -= amount;
+            await _accountsRepository.Update(account);
+
             _eventBus.Publish(new AccountWithdrawEvent
             {
                 AccountId = accountId,
@@ -46,6 +48,7 @@ namespace Accounting
         {
             var account = await _accountsRepository.GetById(accountId);
             account.Amount += amount;
+            await _accountsRepository.Update(account);
 
             _eventBus.Publish(new AccountAcquiredEvent
             {

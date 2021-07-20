@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Accounting;
 using Accounting.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Serilog;
@@ -21,12 +22,6 @@ namespace WebApplication4.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var id1 = await _managementService.CreateAccount(Guid.Empty, "BYN");
-            await _managementService.Acquire(id1, 1000);
-
-            var id2 = await _managementService.CreateAccount(Guid.Empty, "RUB");
-            await _managementService.Acquire(id2, 1000);
-
             var accounts = await _managementService.GetAccounts();
             var viewModels = accounts.Select(x => new AccountViewModel
             {

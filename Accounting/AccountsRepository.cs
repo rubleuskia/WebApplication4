@@ -1,33 +1,45 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DatabaseAccess;
+using DatabaseAccess.Entity;
 
 namespace Accounting
 {
     public class AccountsRepository : IAccountsRepository
     {
-        private readonly List<Account> _accounts = new();
+        private readonly ApplicationContext _context;
 
-        public Task Add(Account account)
+        public AccountsRepository(ApplicationContext context)
         {
-            if (_accounts.All(x => x.Id != account.Id))
-            {
-                _accounts.Add(account);
-            }
+            _context = context;
+        }
 
-            return Task.CompletedTask;
+        public async Task Add(Account account)
+        {
+            if (_context.Accounts.All(x => x.Id != account.Id))
+            {
+                _context.Accounts.Add(account);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public Task Update(Account account)
+        {
+            _context.Update(account);
+            return _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid accountId)
         {
             Account result = await GetById(accountId);
-            _accounts.Remove(result);
+            _context.Accounts.Remove(result);
+            await _context.SaveChangesAsync();
         }
 
         public Task<Account> GetById(Guid accountId)
         {
-            var account = _accounts.SingleOrDefault(x => x.Id == accountId);
+            var account = _context.Accounts.SingleOrDefault(x => x.Id == accountId);
             if (account == null)
             {
                 throw new InvalidOperationException("Cannot find an account with ID:" + accountId);
@@ -38,7 +50,7 @@ namespace Accounting
 
         public Task<Account[]> GetAll()
         {
-            return Task.FromResult(_accounts.ToArray());
+            return Task.FromResult(_context.Accounts.ToArray());
         }
     }
 }

@@ -8,6 +8,8 @@ using Currencies.Common;
 using Currencies.Common.Caching;
 using Currencies.Common.Conversion;
 using Currencies.Common.Infos;
+using DatabaseAccess;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TelegramBot;
@@ -17,6 +19,12 @@ namespace WebApplication4.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void RegisterEntityFramework(this IServiceCollection services, IConfiguration configuration)
+        {
+            string connection = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+        }
+
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<TelegramBotOptions>(configuration.GetSection("TelegramBot"));
@@ -27,12 +35,12 @@ namespace WebApplication4.Extensions
             services.AddSingleton<ITelegramBotService, TelegramBotService>();
             services.AddSingleton<IEventBus, EventBus>();
             services.AddSingleton<ICurrenciesApiCacheService, CurrenciesApiCacheService>();
-            services.AddSingleton<IAccountsRepository, AccountsRepository>();
             services.AddSingleton<IAccountOperationsTrackingService, AccountOperationsTrackingService>();
             services.AddSingleton<GetNowAtSite>(() => DateTime.UtcNow);
 
             RegisterCurrenciesApi(services, configuration);
 
+            services.AddTransient<IAccountsRepository, AccountsRepository>();
             services.AddTransient<ICurrencyInfoService, CurrencyInfoService>();
             services.AddTransient<IAccountAcquiringService, AccountAcquiringService>();
             services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
