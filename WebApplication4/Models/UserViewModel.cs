@@ -2,14 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication4.Models
 {
-    public class User
+    public class UserViewModel
     {
-        public bool IsNew => Id == 0;
-
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [Range(1, 100)]

@@ -1,4 +1,4 @@
-@model User
+@model UserViewModel
 
 <div class="container">
     <div class="row">
@@ -8,9 +8,9 @@
             <fieldset>
                 <legend>User details</legend>
                 <div class="mb-3">
-                    <label for="name-input" class="form-label">Name</label>
-                    <input asp-for="Name" type="text" value="@Model.Name" id="name-input" class="form-control" placeholder="Name">
-                    <span asp-validation-for="Name" class="text-danger"></span>
+                    <label for="email-input" class="form-label">Email</label>
+                    <input asp-for="Email" type="text" value="@Model.Email" id="email-input" class="form-control" placeholder="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label for="age-input" class="form-label">Age</label>

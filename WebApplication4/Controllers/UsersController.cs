@@ -1,6 +1,7 @@
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
+using DatabaseAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication4.Models;
 
@@ -8,100 +9,120 @@ namespace WebApplication4.Controllers
 {
     public class UsersController : Controller
     {
-        private static List<User> _users = new()
+        private readonly UserManager<User> _userManager;
+
+        public UsersController(UserManager<User> userManager)
         {
-            new User
-            {
-                Id = 1, Name = "John"
-            },
-            new User
-            {
-                Id = 2, Name = "Bob"
-            },
-            new User
-            {
-                Id = 3, Name = "Albert"
-            },
-            new User
-            {
-                Id = 4, Name = "Sara"
-            },
-            new User
-            {
-                Id = 5, Name = "Mike"
-            },
-            new User
-            {
-                Id = 6, Name = "Nick"
-            },
-        };
+            _userManager = userManager;
+        }
 
         [HttpGet]
         public IActionResult Index()
         {
-            return View(_users.ToArray());
+            var users = _userManager.Users.ToArray();
+            return View(users.Select(x => new UserViewModel
+            {
+                Age = x.Age,
+                Id = x.Id,
+                Email = x.Email,
+            }).ToArray());
         }
 
         [HttpGet]
-        public IActionResult Details([Range(1, int.MaxValue)]int id)
+        public async Task<IActionResult> Details(string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            var user = _users.SingleOrDefault(x => x.Id == id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return BadRequest();
             }
 
-            return View("UserDetails", user);
+            return View("UserDetails", new UserViewModel
+            {
+                Age = user.Age,
+                Email = user.Email,
+                Id = user.Id,
+            });
         }
 
         [HttpGet]
-        public IActionResult Edit([Range(0, int.MaxValue)] int id)
+        public async Task<IActionResult> Edit(string id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            if (id == 0)
-            {
-                return View(new User());
-            }
-
-            var user = _users.SingleOrDefault(x => x.Id == id);
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return BadRequest();
             }
 
-            return View(user);
+            return View(new UserViewModel
+            {
+                Age = user.Age,
+                Email = user.Email,
+                Id = user.Id,
+            });
         }
 
         [HttpPost]
-        public IActionResult Update(User user)
+        public async Task<IActionResult> Update(UserViewModel userViewModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            if (user.IsNew)
+            var userToUpdate = await _userManager.FindByIdAsync(userViewModel.Id);
+            if (userToUpdate == null)
             {
-                user.Id = _users.Max(x => x.Id) + 1;
-                _users.Add(user);
-            }
-            else
-            {
-                var userToUpdate = _users.Single(x => x.Id == user.Id);
-                userToUpdate.Age = user.Age;
-                userToUpdate.Name = user.Name;
+                return BadRequest();
             }
 
+            userToUpdate.Age = userViewModel.Age.Value;
+            userToUpdate.Email = userViewModel.Email;
+            userToUpdate.UserName = userViewModel.Email;
+            await _userManager.UpdateAsync(userToUpdate);
+
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = new User
+            {
+                Age = model.Age.Value,
+                Email = model.Email,
+                UserName = model.Email
+            };
+
+            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, $"(${error.Code}) ${error.Description})");
+
+            }
+
+            return View(model);
         }
     }
 }

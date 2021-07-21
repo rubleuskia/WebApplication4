@@ -9,6 +9,8 @@ using Currencies.Common.Caching;
 using Currencies.Common.Conversion;
 using Currencies.Common.Infos;
 using DatabaseAccess;
+using DatabaseAccess.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,7 @@ namespace WebApplication4.Extensions
         {
             string connection = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)

@@ -1,4 +1,4 @@
-@model User;
+@model UserViewModel;
 
 <div class="container">
   <div class="row">
@@ -6,8 +6,8 @@
       <fieldset disabled>
         <legend>User details</legend>
         <div class="mb-3">
-          <label for="name-input" class="form-label">Name</label>
-          <input type="text" value="@Model.Name" id="name-input" class="form-control" placeholder="Name">
+          <label for="name-input" class="form-label">Email</label>
+          <input type="text" value="@Model.Email" id="name-input" class="form-control" placeholder="Name">
         </div>
         <div class="mb-3">
           <label for="age-input" class="form-label">Age</label>

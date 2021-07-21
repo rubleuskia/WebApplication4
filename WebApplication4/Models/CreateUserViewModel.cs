@@ -2,12 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication4.Models
 {
-    public class UserViewModel
+    public class CreateUserViewModel
     {
-        public string Id { get; set; }
-
         [Required]
         public string Email { get; set; }
+
+        [Required]
+        public string Password { get; set; }
 
         [Required]
         [Range(1, 100)]
