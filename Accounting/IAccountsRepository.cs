@@ -10,6 +10,6 @@ namespace Accounting
         Task Update(Account account);
         Task Delete(Guid accountId);
         Task<Account> GetById(Guid accountId);
-        Task<Account[]> GetAll();
+        Task<Account[]> GetAll(string userId);
     }
 }

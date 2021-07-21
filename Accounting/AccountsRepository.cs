@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DatabaseAccess;
 using DatabaseAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Accounting
 {
@@ -48,9 +49,9 @@ namespace Accounting
             return Task.FromResult(account);
         }
 
-        public Task<Account[]> GetAll()
+        public Task<Account[]> GetAll(string userId)
         {
-            return Task.FromResult(_context.Accounts.ToArray());
+            return _context.Accounts.Where(x => x.UserId == userId).ToArrayAsync();
         }
     }
 }

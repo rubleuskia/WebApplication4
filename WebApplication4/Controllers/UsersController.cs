@@ -1,12 +1,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication4.Models;
 
 namespace WebApplication4.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;

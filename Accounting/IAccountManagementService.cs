@@ -6,7 +6,7 @@ namespace Accounting
 {
     public interface IAccountManagementService
     {
-        Task<Guid> CreateAccount(Guid userId, string currencyCharCode);
+        Task<Guid> CreateAccount(string userId, string currencyCharCode);
 
         Task DeleteAccount(Guid accountId);
 
@@ -17,7 +17,7 @@ namespace Accounting
         Task Transfer(AccountTransferParameters parameters);
 
         Task<Account> GetAccount(Guid accountId);
-        Task<Account[]> GetAccounts();
+        Task<Account[]> GetAccounts(string userId);
         bool IsSupportCurrencyCharCode(string currencyCharCode);
     }
 }

@@ -21,14 +21,14 @@ namespace Accounting
             _accountTransferService = accountTransferService;
         }
 
-        public async Task<Guid> CreateAccount(Guid userId, string currencyCharCode)
+        public async Task<Guid> CreateAccount(string userId, string currencyCharCode)
         {
             var accountId = Guid.NewGuid();
             await _accountsRepository.Add(new Account
             {
                 Amount = 0,
                 Id = accountId,
-                UserId = userId.ToString(),
+                UserId = userId,
                 CurrencyCharCode = currencyCharCode,
             });
             return accountId;
@@ -61,9 +61,9 @@ namespace Accounting
             return _accountsRepository.GetById(accountId);
         }
 
-        public Task<Account[]> GetAccounts()
+        public Task<Account[]> GetAccounts(string userId)
         {
-            return _accountsRepository.GetAll();
+            return _accountsRepository.GetAll(userId);
         }
 
         public bool IsSupportCurrencyCharCode(string currencyCharCode)
