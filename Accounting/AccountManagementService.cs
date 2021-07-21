@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DatabaseAccess.Entity;
+using DatabaseAccess.Entities;
 
 namespace Accounting
 {
@@ -28,7 +28,7 @@ namespace Accounting
             {
                 Amount = 0,
                 Id = accountId,
-                UserId = userId,
+                UserId = userId.ToString(),
                 CurrencyCharCode = currencyCharCode,
             });
             return accountId;

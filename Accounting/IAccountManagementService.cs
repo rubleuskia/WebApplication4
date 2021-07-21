@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using DatabaseAccess.Entity;
+using DatabaseAccess.Entities;
 
 namespace Accounting
 {

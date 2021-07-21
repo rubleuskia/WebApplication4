@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DatabaseAccess.Entity
+namespace DatabaseAccess.Entities
 {
     public class Account
     {
@@ -10,6 +10,9 @@ namespace DatabaseAccess.Entity
 
         public decimal Amount { get; set; }
 
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
+
+        // navigation property
+        public User User { get; set; }
     }
 }
