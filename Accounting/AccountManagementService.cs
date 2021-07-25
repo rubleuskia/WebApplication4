@@ -21,9 +21,10 @@ namespace Accounting
             _accountTransferService = accountTransferService;
         }
 
-        public async Task<Guid> CreateAccount(string userId, string currencyCharCode)
+        public async Task<Account> CreateAccount(string userId, string currencyCharCode)
         {
             var accountId = Guid.NewGuid();
+
             await _accountsRepository.Add(new Account
             {
                 Amount = 0,
@@ -31,7 +32,8 @@ namespace Accounting
                 UserId = userId,
                 CurrencyCharCode = currencyCharCode,
             });
-            return accountId;
+
+            return await _accountsRepository.GetById(accountId);
         }
 
         public Task DeleteAccount(Guid accountId)
@@ -39,16 +41,16 @@ namespace Accounting
             return _accountsRepository.Delete(accountId);
         }
 
-        public Task Withdraw(Guid accountId, decimal amount)
+        public Task Withdraw(Guid accountId, byte[] version, decimal amount)
         {
             AssertValidAmount(amount);
-            return _accountAcquiringService.Withdraw(accountId, amount);
+            return _accountAcquiringService.Withdraw(accountId, version, amount);
         }
 
-        public Task Acquire(Guid accountId, decimal amount)
+        public Task Acquire(Guid accountId, byte[] version, decimal amount)
         {
             AssertValidAmount(amount);
-            return _accountAcquiringService.Acquire(accountId, amount);
+            return _accountAcquiringService.Acquire(accountId, version, amount);
         }
 
         public Task Transfer(AccountTransferParameters parameters)

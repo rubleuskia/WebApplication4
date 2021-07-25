@@ -12,7 +12,8 @@ namespace DatabaseAccess.Entities
 
         public string UserId { get; set; }
 
-        // navigation property
         public User User { get; set; }
+
+        public byte[] Version { get; set; }
     }
 }

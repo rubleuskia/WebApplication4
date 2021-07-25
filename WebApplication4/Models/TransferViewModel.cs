@@ -13,10 +13,10 @@ namespace WebApplication4.Models
         public decimal Amount { get; set; }
 
         [Required]
-        public Guid? From { get; set; }
+        public Guid From { get; set; }
 
         [Required]
-        public Guid? To { get; set; }
+        public Guid To { get; set; }
 
         public string CurrencyCharCode { get; set; }
 

@@ -1,21 +1,17 @@
-﻿using System;
-using DatabaseAccess.Entities;
+﻿using DatabaseAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace DatabaseAccess
 {
     public class ApplicationContext : IdentityDbContext<User>
     {
-        private readonly IOptions<SeedDataOptions> _seedOptions;
         public DbSet<Account> Accounts { get; set; }
 
-        public ApplicationContext(IOptions<SeedDataOptions> seedOptions, DbContextOptions<ApplicationContext> options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
-            _seedOptions = seedOptions;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -34,25 +30,33 @@ namespace DatabaseAccess
                 .HasOne(x => x.User)
                 .WithMany(x => x.Accounts)
                 .HasForeignKey(x => x.UserId);
+
+            builder.Entity<Account>()
+                .Property(a => a.Version)
+                .IsRowVersion();
         }
 
-        private void CreateSeedUsers(ModelBuilder builder)
+        private static void CreateSeedUsers(ModelBuilder builder)
         {
             var role = new IdentityRole
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "266fa2f3-766c-42b4-a409-9a7abd6e0b84",
                 Name = "Administrator",
                 NormalizedName = "ADMINISTRATOR",
+                ConcurrencyStamp = "75645469-96e7-4aff-9119-019d84c16984",
             };
 
             var user = new User
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = "08b335ba-bd9c-4ed0-8fb0-23c4551f272d",
                 Email = "admin@admin.com",
                 UserName = "admin@admin.com",
                 NormalizedUserName = "ADMIN@ADMIN.COM",
+                ConcurrencyStamp = "791eb30f-3fa2-4116-bc66-b67473be8e4c",
+                SecurityStamp = "e0fef372-3022-4681-8889-95571a6dddf3",
                 Age = 100,
-                PasswordHash = new PasswordHasher<User>().HashPassword(null, _seedOptions.Value.AdminUserPassword)
+                // PasswordHash = new PasswordHasher<User>().HashPassword(null, _seedOptions.Value.AdminUserPassword)
+                PasswordHash = "AQAAAAEAACcQAAAAEC27dnWY85PP6ENmRFIZpc04i3OusxPvrs/B9Jybhmt6hHy3KojwGcWq5D1KhCFutg=="
             };
 
             builder.Entity<IdentityRole>().HasData(role);

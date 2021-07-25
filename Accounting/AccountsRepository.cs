@@ -25,10 +25,11 @@ namespace Accounting
             }
         }
 
-        public Task Update(Account account)
+        public async Task Update(Account account, byte[] version)
         {
-            _context.Update(account);
-            return _context.SaveChangesAsync();
+            _context.Entry(account).Property(nameof(account.Version)).OriginalValue = version;
+            _context.Accounts.Update(account);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid accountId)

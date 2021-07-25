@@ -8,6 +8,8 @@ namespace WebApplication4.Models
     {
         public Guid Id { get; set; }
 
+        public byte[] Version { get; set; }
+
         public string CurrencyName { get; set; }
 
         [Required]

@@ -29,29 +29,19 @@ namespace Accounting
             var fromAccount = await _accountsRepository.GetById(parameters.FromAccount);
             var toAccount = await _accountsRepository.GetById(parameters.ToAccount);
 
-            // create guid
-            // account1.LockTransactions(guid); | account.State = TransferInprogres
-            // account2.LockTransactions(guid);
-
             var withdrawAmount = await _currencyConversionService.Convert(
                 parameters.CurrencyCharCode,
                 fromAccount.CurrencyCharCode,
                 parameters.Amount);
 
-            // Withdraw(guid)
-            await _accountAcquiringService.Withdraw(parameters.FromAccount, withdrawAmount);
+            await _accountAcquiringService.Withdraw(parameters.FromAccount, parameters.FromVersion, withdrawAmount);
 
-            // exception?
-            // TODO: transaction logic
-            // 1. persist transaction history
-            // 2. rollback changes if operation fails
             var acquireAmount = await _currencyConversionService.Convert(
                 parameters.CurrencyCharCode,
                 toAccount.CurrencyCharCode,
                 parameters.Amount);
 
-            await _accountAcquiringService.Acquire(parameters.ToAccount, acquireAmount);
-            // finally - unlock/rollback/etc
+            await _accountAcquiringService.Acquire(parameters.ToAccount, parameters.ToVersion, acquireAmount);
 
             _eventBus.Publish(new AccountTransferEvent
             {

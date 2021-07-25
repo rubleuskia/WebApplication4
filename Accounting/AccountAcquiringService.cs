@@ -6,8 +6,6 @@ using Common.Accounting;
 
 namespace Accounting
 {
-    // Action => delegate void Name();
-    // Action<Guid, decimal> => delegate void EventHandler(Guid accountId, decimal amount);
     public class AccountAcquiringService : IAccountAcquiringService
     {
         private readonly IEventBus _eventBus;
@@ -19,11 +17,9 @@ namespace Accounting
             _eventBus = eventBus;
         }
 
-        // transfer or direct (?)
-        public async Task Withdraw(Guid accountId, decimal amount)
+        public async Task Withdraw(Guid accountId, byte[] version, decimal amount)
         {
             var account = await _accountsRepository.GetById(accountId);
-
             if (account.Amount < amount)
             {
                 throw new NotEnoughMoneyToWithdrawException("Not enough money.")
@@ -35,7 +31,7 @@ namespace Accounting
             }
 
             account.Amount -= amount;
-            await _accountsRepository.Update(account);
+            await _accountsRepository.Update(account, version);
 
             _eventBus.Publish(new AccountWithdrawEvent
             {
@@ -44,11 +40,11 @@ namespace Accounting
             });
         }
 
-        public async Task Acquire(Guid accountId, decimal amount)
+        public async Task Acquire(Guid accountId, byte[] version, decimal amount)
         {
             var account = await _accountsRepository.GetById(accountId);
             account.Amount += amount;
-            await _accountsRepository.Update(account);
+            await _accountsRepository.Update(account, version);
 
             _eventBus.Publish(new AccountAcquiredEvent
             {

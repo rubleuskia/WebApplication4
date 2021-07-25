@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WebApplication4.Models;
 
@@ -64,10 +65,10 @@ namespace WebApplication4.Controllers
             }
 
             var userId = _userManager.GetUserId(User);
-            var accountId = await _managementService.CreateAccount(userId, model.CurrencyCharCode);
-            await _managementService.Acquire(accountId, model.Amount);
+            var account = await _managementService.CreateAccount(userId, model.CurrencyCharCode);
+            await _managementService.Acquire(account.Id, account.Version, model.Amount);
 
-            Log.Information($"Account with ID: {accountId} created");
+            Log.Information($"Account with ID: {account.Id} created");
             return RedirectToAction("Index");
         }
 
@@ -79,6 +80,7 @@ namespace WebApplication4.Controllers
             {
                 Amount = account.Amount,
                 Id = account.Id,
+                Version = account.Version,
                 InputAmount = 0,
                 CurrencyCharCode = account.CurrencyCharCode
             });
@@ -92,7 +94,17 @@ namespace WebApplication4.Controllers
                 return BadRequest();
             }
 
-            await _managementService.Acquire(model.Id, model.InputAmount);
+            try
+            {
+                await _managementService.Acquire(model.Id, model.Version, model.InputAmount);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Log.Error(ex, "Error occured during transfer operation.");
+                ModelState.AddModelError(string.Empty, $"Account state has been updated. Please refresh and try again.");
+                return View("Acquire", model);
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -101,13 +113,19 @@ namespace WebApplication4.Controllers
             var userId = _userManager.GetUserId(User);
             var accounts = await _managementService.GetAccounts(userId);
 
+            ViewData["accounts"] = accounts;
             return View(new TransferViewModel
             {
                 AvailableCharCodes = GetAvailableCharCodes(),
-                Accounts = accounts
-                    .Select(x => new SelectListItem($"{x.Id} ({x.CurrencyCharCode})", x.Id.ToString()))
-                    .ToArray()
+                Accounts = GetAccountsSelectItems(accounts)
             });
+        }
+
+        private static SelectListItem[] GetAccountsSelectItems(Account[] accounts)
+        {
+            return accounts
+                .Select(x => new SelectListItem($"{x.Id} ({x.CurrencyCharCode})", $"{x.Id}-{x.Version}"))
+                .ToArray();
         }
 
         public async Task<IActionResult> PerformTransfer(TransferViewModel model)
@@ -123,21 +141,22 @@ namespace WebApplication4.Controllers
                 var accounts = await _managementService.GetAccounts(userId);
 
                 ModelState.AddModelError("To", "Cannot transfer money to the same account.");
-                // TODO into common method
-                model.Accounts = accounts
-                    .Select(x => new SelectListItem($"{x.Id} ({x.CurrencyCharCode})", x.Id.ToString()))
-                    .ToArray();
-
+                model.Accounts = GetAccountsSelectItems(accounts);
                 return View("Transfer", model);
             }
 
             try
             {
+                var accounts = ViewData["accounts"] as Account[];
+                var fromVersion = accounts.Single(x => x.Id == model.From).Version;
+                var toVersion = accounts.Single(x => x.Id == model.To).Version;
                 await _managementService.Transfer(new AccountTransferParameters
                 {
                     Amount = model.Amount,
-                    FromAccount = model.From.Value,
-                    ToAccount = model.To.Value,
+                    FromAccount = model.From,
+                    FromVersion = fromVersion,
+                    ToAccount = model.To,
+                    ToVersion = toVersion,
                     CurrencyCharCode = model.CurrencyCharCode,
                 });
             }
@@ -145,6 +164,12 @@ namespace WebApplication4.Controllers
             {
                 Log.Error(ex, "Error occured during transfer operation.");
                 ModelState.AddModelError("Amount", $"Not enough money on account {ex.AccountId}: current amount - {ex.OriginalAmount}.");
+                return View("Transfer", model);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                Log.Error(ex, "Error occured during transfer operation.");
+                ModelState.AddModelError(string.Empty, "Account state has been updated. Please refresh and try again.");
                 return View("Transfer", model);
             }
 

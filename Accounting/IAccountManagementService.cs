@@ -6,13 +6,13 @@ namespace Accounting
 {
     public interface IAccountManagementService
     {
-        Task<Guid> CreateAccount(string userId, string currencyCharCode);
+        Task<Account> CreateAccount(string userId, string currencyCharCode);
 
         Task DeleteAccount(Guid accountId);
 
-        Task Withdraw(Guid accountId, decimal amount);
+        Task Withdraw(Guid accountId, byte[] version, decimal amount);
 
-        Task Acquire(Guid accountId, decimal amount);
+        Task Acquire(Guid accountId, byte[] version, decimal amount);
 
         Task Transfer(AccountTransferParameters parameters);
 
