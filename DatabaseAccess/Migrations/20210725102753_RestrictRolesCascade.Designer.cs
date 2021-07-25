@@ -4,14 +4,16 @@ using DatabaseAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210725102753_RestrictRolesCascade")]
+    partial class RestrictRolesCascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,24 +109,6 @@ namespace DatabaseAccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "08b335ba-bd9c-4ed0-8fb0-23c4551f272d",
-                            AccessFailedCount = 0,
-                            Age = 100,
-                            ConcurrencyStamp = "791eb30f-3fa2-4116-bc66-b67473be8e4c",
-                            Email = "admin@admin.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC27dnWY85PP6ENmRFIZpc04i3OusxPvrs/B9Jybhmt6hHy3KojwGcWq5D1KhCFutg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "11ab0586-5e41-4a60-ae7c-eaffe242d3e8",
-                            TwoFactorEnabled = false,
-                            UserName = "admin"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -152,15 +136,6 @@ namespace DatabaseAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "266fa2f3-766c-42b4-a409-9a7abd6e0b84",
-                            ConcurrencyStamp = "75645469-96e7-4aff-9119-019d84c16984",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -246,13 +221,6 @@ namespace DatabaseAccess.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "08b335ba-bd9c-4ed0-8fb0-23c4551f272d",
-                            RoleId = "266fa2f3-766c-42b4-a409-9a7abd6e0b84"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

@@ -31,6 +31,7 @@ namespace WebApplication4.Extensions
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<TelegramBotOptions>(configuration.GetSection("TelegramBot"));
+            services.Configure<SeedDataOptions>(configuration.GetSection("Seeds"));
         }
 
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)

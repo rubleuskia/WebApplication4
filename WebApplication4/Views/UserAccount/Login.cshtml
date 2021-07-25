@@ -4,6 +4,7 @@
     <div class="row">
         <form method="post" asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ReturnUrl" />
             <fieldset>
                 <legend>Login:</legend>
                 <div class="mb-3">

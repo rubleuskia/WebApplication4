@@ -22,6 +22,11 @@ namespace WebApplication4
             services.RegisterDependencies(Configuration);
             services.RegisterOptions(Configuration);
             services.RegisterEntityFramework(Configuration);
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/UserAccount/Login";
+                options.AccessDeniedPath = "/UserAccount/Login";
+            });
             services.AddHostedService<TelegramHostedService>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -48,6 +53,11 @@ namespace WebApplication4
 
             app.UseAuthentication(); // login => has access to server data +
             app.UseAuthorization(); // access by condition: admin / non-admin
+            // app.UseCookieAuthentication(new CookieAuthenticationOptions {
+            //     LoginPath = new PathString("/Login/"),
+            //     AuthenticationType = "My-Magical-Authentication",
+            //     // etc...
+            // },
 
             app.UseEndpoints(endpoints =>
             {

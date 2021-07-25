@@ -8,7 +8,7 @@ using WebApplication4.Models;
 
 namespace WebApplication4.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = ApplicationConstants.Roles.Admin)]
     public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;
