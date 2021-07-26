@@ -1,4 +1,5 @@
 ﻿using DatabaseAccess.Entities;
+using DatabaseAccess.Quizzes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,33 @@ namespace DatabaseAccess
             builder.Entity<Account>()
                 .Property(a => a.Version)
                 .IsRowVersion();
+
+            builder.Entity<Quiz>().HasMany(x => x.Questions)
+                .WithOne(x => x.Quiz)
+                .HasForeignKey(x => x.QuizId);
+
+            builder.Entity<QuizAnswerHistoryRecord>().HasOne(x => x.Question)
+                .WithMany()
+                .HasForeignKey(x => x.QuestionId);
+
+            builder.Entity<QuizRatingRecord>().HasKey(r => new {r.QuizId, r.UserId});
+            builder.Entity<QuizRatingRecord>().HasOne(x => x.Quiz)
+                .WithMany()
+                .HasForeignKey(x => x.QuizId);
+
+            builder.Entity<QuizRatingRecord>().HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
+
+            builder.Entity<QuizCompletionRecord>().HasKey(r => new {r.QuizId, r.UserId});
+
+            builder.Entity<QuizCompletionRecord>().HasOne(x => x.Quiz)
+                .WithMany()
+                .HasForeignKey(x => x.QuizId);
+
+            builder.Entity<QuizCompletionRecord>().HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
         }
 
         private static void CreateSeedUsers(ModelBuilder builder)
