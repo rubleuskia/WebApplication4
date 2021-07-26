@@ -23,6 +23,11 @@ namespace WebApplication4
             services.RegisterOptions(Configuration);
             services.RegisterEntityFramework(Configuration);
             services.AddHostedService<TelegramHostedService>();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/UserAccount/Login";
+                options.AccessDeniedPath = "/UserAccount/Login";
+            });
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
         }

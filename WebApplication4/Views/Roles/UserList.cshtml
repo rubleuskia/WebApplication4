@@ -1,0 +1,30 @@
+﻿@model UserViewModel[]
+
+@if (Model.Length == 0)
+{
+    <a class="btn btn-sm btn-primary" asp-action="Index" asp-controller="Users">Manage users</a>
+    return;
+}
+
+<table class="table table-striped table-responsive-md btn-table">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (int i = 0; i < Model.Length; i++)
+    {
+        var user = Model[i];
+        <tr>
+            <th scope="row">@(i+1)</th>
+            <td>@user.Email</td>
+            <td>
+                <a class="btn btn-sm btn-secondary" asp-action="Edit" asp-route-id="@user.Id">Manage roles</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

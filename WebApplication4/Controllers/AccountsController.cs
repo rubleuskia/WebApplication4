@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Accounting;
 using Accounting.Exceptions;
+using DatabaseAccess;
 using DatabaseAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using WebApplication4.Models;
 
@@ -18,11 +21,13 @@ namespace WebApplication4.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IAccountManagementService _managementService;
+        private readonly ApplicationContext _applicationContext;
 
-        public AccountsController(IAccountManagementService managementService, UserManager<User> userManager)
+        public AccountsController(IAccountManagementService managementService, UserManager<User> userManager, ApplicationContext applicationContext)
         {
             _managementService = managementService;
             _userManager = userManager;
+            _applicationContext = applicationContext;
         }
 
         public async Task<IActionResult> Index()
@@ -67,6 +72,33 @@ namespace WebApplication4.Controllers
             var accountId = await _managementService.CreateAccount(userId, model.CurrencyCharCode);
             await _managementService.Acquire(accountId, model.Amount);
 
+            if (!_applicationContext.Quizzes.Any())
+            {
+                await _applicationContext.Quizzes.AddAsync(new Quiz
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "My test quizzzzz",
+                    IsCompleted = false,
+                    Questions = new List<QuizQuestion>
+                    {
+                        new QuizQuestion
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = "Some question 2?",
+                            Answer = "Yes",
+                        },
+                        new QuizQuestion
+                        {
+                            Id = Guid.NewGuid(),
+                            Text = "Some question 1?",
+                            Answer = "Yes",
+                        }
+                    }
+                });
+
+                await _applicationContext.SaveChangesAsync();
+            }
+
             Log.Information($"Account with ID: {accountId} created");
             return RedirectToAction("Index");
         }
@@ -93,6 +125,44 @@ namespace WebApplication4.Controllers
             }
 
             await _managementService.Acquire(model.Id, model.InputAmount);
+
+            if (_applicationContext.Quizzes.Any())
+            {
+                var quiz = await _applicationContext.Quizzes
+                    .Include(x => x.Questions)
+                    .Include(x => x.QuizCompletions)
+                    .FirstAsync();
+
+                var quizQuestionId1 = quiz.Questions.First().Id;
+                var quizQuestionId2 = quiz.Questions.Last().Id;
+
+                var userId = _userManager.GetUserId(User);
+
+                quiz.QuizCompletions.Add(new QuizCompletionHistory
+                {
+                    UserId = userId,
+                    UserAnswers = new List<QuizQuestionUserAnswer>
+                    {
+                        new QuizQuestionUserAnswer
+                        {
+                            UserId = userId,
+                            ActualAnswer = "My answer 1",
+                            IsCorrect = true,
+                            QuizQuestionId = quizQuestionId1,
+                        },
+                        new QuizQuestionUserAnswer
+                        {
+                            UserId = userId,
+                            ActualAnswer = "My answer 2",
+                            IsCorrect = false,
+                            QuizQuestionId = quizQuestionId2,
+                        }
+                    }
+                });
+
+                await _applicationContext.SaveChangesAsync();
+            }
+
             return RedirectToAction("Index");
         }
 
