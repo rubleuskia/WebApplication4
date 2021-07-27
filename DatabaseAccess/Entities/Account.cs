@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace DatabaseAccess.Entities
+﻿namespace DatabaseAccess.Entities
 {
-    public class Account
+    public class Account : BaseEntity
     {
-        public Guid Id { get; set; }
-
         public string CurrencyCharCode { get; set; }
 
         public decimal Amount { get; set; }

@@ -27,6 +27,7 @@ namespace WebApplication4
                 options.LoginPath = "/UserAccount/Login";
                 options.AccessDeniedPath = "/UserAccount/Login";
             });
+            services.AddHttpContextAccessor();
             services.AddHostedService<TelegramHostedService>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();

@@ -1,18 +1,28 @@
-﻿using DatabaseAccess.Entities;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using DatabaseAccess.Entities;
+using DatabaseAccess.Infrastructure;
 using DatabaseAccess.Quizzes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DatabaseAccess
 {
     public class ApplicationContext : IdentityDbContext<User>
     {
+        private readonly IServiceProvider _serviceProvider;
+
         public DbSet<Account> Accounts { get; set; }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        public ApplicationContext(
+            DbContextOptions<ApplicationContext> options,
+            IServiceProvider serviceProvider)
             : base(options)
         {
+            _serviceProvider = serviceProvider;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -20,22 +30,13 @@ namespace DatabaseAccess
             base.OnModelCreating(builder);
 
             CreateSeedUsers(builder);
+            ConfigureAccount(builder);
+            ConfigureIdentity(builder);
+            ConfigureQuiz(builder);
+        }
 
-            builder.Entity<IdentityRole>()
-                .HasMany<IdentityUserRole<string>>()
-                .WithOne()
-                .HasForeignKey(x => x.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Account>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.Accounts)
-                .HasForeignKey(x => x.UserId);
-
-            builder.Entity<Account>()
-                .Property(a => a.Version)
-                .IsRowVersion();
-
+        private static void ConfigureQuiz(ModelBuilder builder)
+        {
             builder.Entity<Quiz>().HasMany(x => x.Questions)
                 .WithOne(x => x.Quiz)
                 .HasForeignKey(x => x.QuizId);
@@ -62,6 +63,47 @@ namespace DatabaseAccess
             builder.Entity<QuizCompletionRecord>().HasOne(x => x.User)
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
+        }
+
+        private static void ConfigureIdentity(ModelBuilder builder)
+        {
+            builder.Entity<IdentityRole>()
+                .HasMany<IdentityUserRole<string>>()
+                .WithOne()
+                .HasForeignKey(x => x.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        private static void ConfigureAccount(ModelBuilder builder)
+        {
+            builder.Entity<Account>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.Accounts)
+                .HasForeignKey(x => x.UserId);
+
+            builder.Entity<Account>()
+                .HasOne(x => x.CreatedBy)
+                .WithMany()
+                .HasForeignKey(x => x.CreatedById);
+
+            builder.Entity<Account>()
+                .HasOne(x => x.LastUpdatedBy)
+                .WithMany()
+                .HasForeignKey(x => x.LastUpdatedById);
+
+            builder.Entity<Account>()
+                .Property(a => a.Version)
+                .IsRowVersion();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var handler in _serviceProvider.GetServices<IBeforeCommitHandler>())
+            {
+                await handler.Execute(this);
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
         private static void CreateSeedUsers(ModelBuilder builder)

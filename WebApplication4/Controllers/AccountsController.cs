@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Accounting;
 using Accounting.Exceptions;
+using Common.Extensions;
 using DatabaseAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -64,7 +65,7 @@ namespace WebApplication4.Controllers
                 return View("Create", model);
             }
 
-            var userId = _userManager.GetUserId(User);
+            var userId = User.GetUserId();
             var account = await _managementService.CreateAccount(userId, model.CurrencyCharCode);
             await _managementService.Acquire(account.Id, account.Version, model.Amount);
 
@@ -110,7 +111,7 @@ namespace WebApplication4.Controllers
 
         public async Task<IActionResult> Transfer()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = User.GetUserId();
             var accounts = await _managementService.GetAccounts(userId);
 
             ViewData["accounts"] = accounts;
@@ -137,7 +138,7 @@ namespace WebApplication4.Controllers
 
             if (model.From == model.To)
             {
-                var userId = _userManager.GetUserId(User);
+                var userId = User.GetUserId();
                 var accounts = await _managementService.GetAccounts(userId);
 
                 ModelState.AddModelError("To", "Cannot transfer money to the same account.");
