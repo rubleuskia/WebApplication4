@@ -1,30 +1,70 @@
-﻿using DatabaseAccess.Entities;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using DatabaseAccess.Entities;
+using DatabaseAccess.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DatabaseAccess
 {
     public class ApplicationContext : IdentityDbContext<User>
     {
-        public DbSet<Account> Accounts { get; set; }
+        private readonly IServiceProvider _serviceProvider;
 
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        public ApplicationContext(
+            IServiceProvider serviceProvider,
+            DbContextOptions<ApplicationContext> options)
             : base(options)
         {
+            _serviceProvider = serviceProvider;
+        }
+
+        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            await RunBeforeCommitHandlers();
+            return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        public override int SaveChanges()
+        {
+            throw new NotSupportedException();
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            await RunBeforeCommitHandlers();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private async Task RunBeforeCommitHandlers()
+        {
+            foreach (var commitHandler in _serviceProvider.GetServices<IAsyncBeforeCommitHandler>())
+            {
+                await commitHandler.Execute(this);
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            ConfigureAccount(builder);
+            ConfigureQuiz(builder);
+            CreateSeededUser(builder);
+        }
 
-            builder.Entity<Account>()
-                .HasOne(x => x.User)
-                .WithMany(x => x.Accounts)
-                .HasForeignKey(x => x.UserId);
-
+        private static void ConfigureQuiz(ModelBuilder builder)
+        {
             builder.Entity<Quiz>()
                 .HasMany(x => x.Questions)
                 .WithOne(x => x.Quiz)
@@ -65,8 +105,26 @@ namespace DatabaseAccess
                 .HasOne(x => x.User)
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
+        }
 
-            CreateSeededUser(builder);
+        private static void ConfigureAccount(ModelBuilder builder)
+        {
+            builder.Entity<Account>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.Accounts)
+                .HasForeignKey(x => x.UserId);
+
+            builder.Entity<Account>()
+                .HasOne(x => x.CreatedBy)
+                .WithMany()
+                .HasForeignKey(x => x.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Account>()
+                .HasOne(x => x.UpdatedBy)
+                .WithMany()
+                .HasForeignKey(x => x.UpdatedById)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         private static void CreateSeededUser(ModelBuilder builder)

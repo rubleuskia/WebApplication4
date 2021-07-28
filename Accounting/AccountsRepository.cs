@@ -20,21 +20,21 @@ namespace Accounting
         {
             if (_context.Accounts.All(x => x.Id != account.Id))
             {
-                _context.Accounts.Add(account);
+                _context.Accounts.Add(account); // EntityState.Added
                 await _context.SaveChangesAsync();
             }
         }
 
         public Task Update(Account account)
         {
-            _context.Update(account);
+            _context.Update(account); // EntityState.Modified
             return _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid accountId)
         {
             Account result = await GetById(accountId);
-            _context.Accounts.Remove(result);
+            _context.Accounts.Remove(result); // EntityState.Deleted
             await _context.SaveChangesAsync();
         }
 
@@ -51,7 +51,7 @@ namespace Accounting
 
         public Task<Account[]> GetAll(string userId)
         {
-            return _context.Accounts.Where(x => x.UserId == userId).ToArrayAsync();
+            return _context.Accounts.AsNoTracking().Where(x => x.UserId == userId).ToArrayAsync(); // EntityState.Detached
         }
     }
 }
