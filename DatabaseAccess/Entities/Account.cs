@@ -15,5 +15,7 @@ namespace DatabaseAccess.Entities
 
         // navigation property
         public User User { get; set; }
+
+        public byte[] RowVersion { get; set; }
     }
 }

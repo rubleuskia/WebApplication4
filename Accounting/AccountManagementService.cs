@@ -39,16 +39,16 @@ namespace Accounting
             return _accountsRepository.Delete(accountId);
         }
 
-        public Task Withdraw(Guid accountId, decimal amount)
+        public Task Withdraw(Guid accountId, byte[] rowVersion, decimal amount)
         {
             AssertValidAmount(amount);
-            return _accountAcquiringService.Withdraw(accountId, amount);
+            return _accountAcquiringService.Withdraw(accountId, default, amount);
         }
 
-        public Task Acquire(Guid accountId, decimal amount)
+        public Task Acquire(Guid accountId, byte[] rowVersion, decimal amount)
         {
             AssertValidAmount(amount);
-            return _accountAcquiringService.Acquire(accountId, amount);
+            return _accountAcquiringService.Acquire(accountId, rowVersion, amount);
         }
 
         public Task Transfer(AccountTransferParameters parameters)

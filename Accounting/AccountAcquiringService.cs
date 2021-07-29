@@ -20,7 +20,7 @@ namespace Accounting
         }
 
         // transfer or direct (?)
-        public async Task Withdraw(Guid accountId, decimal amount)
+        public async Task Withdraw(Guid accountId, byte[] rowVersion, decimal amount)
         {
             var account = await _accountsRepository.GetById(accountId);
 
@@ -44,10 +44,14 @@ namespace Accounting
             });
         }
 
-        public async Task Acquire(Guid accountId, decimal amount)
+
+        public async Task Acquire(Guid accountId, byte[] rowVersion, decimal amount)
         {
             var account = await _accountsRepository.GetById(accountId);
+
             account.Amount += amount;
+            account.RowVersion = rowVersion;
+
             await _accountsRepository.Update(account);
 
             _eventBus.Publish(new AccountAcquiredEvent

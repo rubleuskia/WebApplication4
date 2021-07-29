@@ -11,5 +11,8 @@ namespace Accounting
         public decimal Amount { get; set; }
 
         public string CurrencyCharCode { get; set; }
+
+        public byte[] FromRowVersion { get; set; }
+        public byte[] ToRowVersion { get; set; }
     }
 }

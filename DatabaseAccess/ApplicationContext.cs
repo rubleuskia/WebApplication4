@@ -110,6 +110,10 @@ namespace DatabaseAccess
         private static void ConfigureAccount(ModelBuilder builder)
         {
             builder.Entity<Account>()
+                .Property(x => x.RowVersion)
+                .IsRowVersion();
+
+            builder.Entity<Account>()
                 .HasOne(x => x.User)
                 .WithMany(x => x.Accounts)
                 .HasForeignKey(x => x.UserId);

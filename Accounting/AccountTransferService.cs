@@ -39,7 +39,7 @@ namespace Accounting
                 parameters.Amount);
 
             // Withdraw(guid)
-            await _accountAcquiringService.Withdraw(parameters.FromAccount, withdrawAmount);
+            // await _accountAcquiringService.Withdraw(parameters.FromAccount, withdrawAmount);
 
             // exception?
             // TODO: transaction logic
@@ -50,7 +50,7 @@ namespace Accounting
                 toAccount.CurrencyCharCode,
                 parameters.Amount);
 
-            await _accountAcquiringService.Acquire(parameters.ToAccount, acquireAmount);
+            // await _accountAcquiringService.Acquire(parameters.ToAccount, acquireAmount);
             // finally - unlock/rollback/etc
 
             _eventBus.Publish(new AccountTransferEvent

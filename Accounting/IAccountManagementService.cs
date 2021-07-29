@@ -10,9 +10,9 @@ namespace Accounting
 
         Task DeleteAccount(Guid accountId);
 
-        Task Withdraw(Guid accountId, decimal amount);
+        Task Withdraw(Guid accountId, byte[] rowVersion, decimal amount);
 
-        Task Acquire(Guid accountId, decimal amount);
+        Task Acquire(Guid accountId, byte[] rowVersion, decimal amount);
 
         Task Transfer(AccountTransferParameters parameters);
 

@@ -5,7 +5,7 @@ namespace Accounting
 {
     public interface IAccountAcquiringService
     {
-        Task Withdraw(Guid accountId, decimal amount);
-        Task Acquire(Guid accountId, decimal amount);
+        Task Withdraw(Guid accountId, byte[] rowVersion, decimal amount);
+        Task Acquire(Guid accountId, byte[] rowVersion, decimal amount);
     }
 }

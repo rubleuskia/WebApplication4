@@ -27,6 +27,8 @@ namespace Accounting
 
         public Task Update(Account account)
         {
+            // TODO (Move to BCH)
+            _context.Entry(account).Property(nameof(account.RowVersion)).OriginalValue = account.RowVersion;
             _context.Update(account); // EntityState.Modified
             return _context.SaveChangesAsync();
         }
@@ -34,7 +36,7 @@ namespace Accounting
         public async Task Delete(Guid accountId)
         {
             Account result = await GetById(accountId);
-            _context.Accounts.Remove(result); // EntityState.Deleted
+            _context.Accounts.Remove(result); // EntityState.Modified
             await _context.SaveChangesAsync();
         }
 
@@ -51,7 +53,7 @@ namespace Accounting
 
         public Task<Account[]> GetAll(string userId)
         {
-            return _context.Accounts.AsNoTracking().Where(x => x.UserId == userId).ToArrayAsync(); // EntityState.Detached
+            return _context.Accounts.AsNoTracking().Where(x => x.UserId == userId).ToArrayAsync();
         }
     }
 }

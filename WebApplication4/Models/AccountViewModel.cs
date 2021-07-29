@@ -22,5 +22,7 @@ namespace WebApplication4.Models
         public decimal InputAmount { get; set; }
 
         public SelectListItem[] AvailableCharCodes { get; set; }
+
+        public byte[] RowVersion { get; set; }
     }
 }
