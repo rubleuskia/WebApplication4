@@ -11,6 +11,7 @@ using Currencies.Common.Infos;
 using DatabaseAccess;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure;
+using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +28,10 @@ namespace WebApplication4.Extensions
             string connection = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
-            services.AddTransient<IAsyncBeforeCommitHandler, CreateEntityAsyncBeforeCommitHandler>();
-            services.AddTransient<IAsyncBeforeCommitHandler, UpdateEntityAsyncBeforeCommitHandler>();
+
+            services.AddTransient<IBeforeCommitHandler, CreateEntityBeforeCommitHandler>();
+            services.AddTransient<IBeforeCommitHandler, UpdateEntityBeforeCommitHandler>();
+            services.AddTransient<IBeforeCommitHandler, VersionedEntityBeforeCommitHandler>();
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)

@@ -2,18 +2,16 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using DatabaseAccess.Entities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace DatabaseAccess.Infrastructure
+namespace DatabaseAccess.Infrastructure.BeforeCommitHandlers
 {
-    public class UpdateEntityAsyncBeforeCommitHandler : IAsyncBeforeCommitHandler
+    public abstract class ApplicationEntityBeforeCommitHandler : IBeforeCommitHandler
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UpdateEntityAsyncBeforeCommitHandler(IHttpContextAccessor httpContextAccessor)
+        protected ApplicationEntityBeforeCommitHandler(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }
@@ -26,21 +24,15 @@ namespace DatabaseAccess.Infrastructure
 
             var now = DateTime.UtcNow;
 
-            foreach (EntityEntry entry in context.ChangeTracker.Entries())
+            foreach (EntityEntry entry in context.ChangeTracker.Entries().Where(IsApplicable))
             {
-                if (entry.Entity is not BaseEntity entity)
-                {
-                    continue;
-                }
-
-                if (entry.State == EntityState.Modified)
-                {
-                    entity.UpdatedAt = now;
-                    entity.UpdatedById = userId;
-                }
+                Execute(entry, userId, now);
             }
 
             return Task.CompletedTask;
         }
+
+        protected abstract bool IsApplicable(EntityEntry entry);
+        protected abstract void Execute(EntityEntry entry, string userId, DateTime now);
     }
 }

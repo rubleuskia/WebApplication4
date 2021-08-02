@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
-using DatabaseAccess.Infrastructure;
+using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +49,7 @@ namespace DatabaseAccess
 
         private async Task RunBeforeCommitHandlers()
         {
-            foreach (var commitHandler in _serviceProvider.GetServices<IAsyncBeforeCommitHandler>())
+            foreach (var commitHandler in _serviceProvider.GetServices<IBeforeCommitHandler>())
             {
                 await commitHandler.Execute(this);
             }

@@ -1,15 +1,11 @@
-using System;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
+using DatabaseAccess.Infrastructure.Repositories;
 
 namespace Accounting
 {
-    public interface IAccountsRepository
+    public interface IAccountsRepository : IGenericRepository<Account>
     {
-        Task Add(Account account);
-        Task Update(Account account);
-        Task Delete(Guid accountId);
-        Task<Account> GetById(Guid accountId);
         Task<Account[]> GetAll(string userId);
     }
 }
