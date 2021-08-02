@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
-using DatabaseAccess;
 using DatabaseAccess.Entities;
-using DatabaseAccess.Infrastructure.Repositories;
+using DatabaseAccess.Infrastructure.Repositories.Common;
 
-namespace Accounting
+namespace DatabaseAccess.Infrastructure.Repositories.Accounts
 {
     public class AccountsRepository : GenericRepository<Account>, IAccountsRepository
     {
-        public AccountsRepository(ApplicationContext context) : base(context)
+        public AccountsRepository(ApplicationContext context)
+            : base(context)
         {
         }
 

@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities.Common;
 
-namespace DatabaseAccess.Infrastructure.Repositories
+namespace DatabaseAccess.Infrastructure.Repositories.Common
 {
     public interface IGenericRepository<TEntity>
         where TEntity : BaseEntity
@@ -18,7 +18,5 @@ namespace DatabaseAccess.Infrastructure.Repositories
         Task<TEntity[]> GetWithInclude(params Expression<Func<TEntity, object>>[] includeProperties);
         Task<TEntity[]> GetWithInclude(Expression<Func<TEntity, bool>> predicate,
              params Expression<Func<TEntity, object>>[] includeProperties);
-
-        Task Commit();
     }
 }

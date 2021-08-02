@@ -10,8 +10,11 @@ using Currencies.Common.Conversion;
 using Currencies.Common.Infos;
 using DatabaseAccess;
 using DatabaseAccess.Entities;
-using DatabaseAccess.Infrastructure;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
+using DatabaseAccess.Infrastructure.Repositories;
+using DatabaseAccess.Infrastructure.Repositories.Accounts;
+using DatabaseAccess.Infrastructure.Repositories.Users;
+using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +35,7 @@ namespace WebApplication4.Extensions
             services.AddTransient<IBeforeCommitHandler, CreateEntityBeforeCommitHandler>();
             services.AddTransient<IBeforeCommitHandler, UpdateEntityBeforeCommitHandler>();
             services.AddTransient<IBeforeCommitHandler, VersionedEntityBeforeCommitHandler>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)
@@ -41,6 +45,15 @@ namespace WebApplication4.Extensions
 
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<IFilesRepository, FilesRepository>();
+            services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IAccountsRepository, AccountsRepository>();
+            services.AddTransient<ICurrencyInfoService, CurrencyInfoService>();
+            services.AddTransient<IAccountAcquiringService, AccountAcquiringService>();
+            services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
+            services.AddTransient<IAccountTransferService, AccountTransferService>();
+            services.AddTransient<IAccountManagementService, AccountManagementService>();
+
             services.AddSingleton<ITelegramBotService, TelegramBotService>();
             services.AddSingleton<IEventBus, EventBus>();
             services.AddSingleton<ICurrenciesApiCacheService, CurrenciesApiCacheService>();
@@ -48,13 +61,6 @@ namespace WebApplication4.Extensions
             services.AddSingleton<GetNowAtSite>(() => DateTime.UtcNow);
 
             RegisterCurrenciesApi(services, configuration);
-
-            services.AddTransient<IAccountsRepository, AccountsRepository>();
-            services.AddTransient<ICurrencyInfoService, CurrencyInfoService>();
-            services.AddTransient<IAccountAcquiringService, AccountAcquiringService>();
-            services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
-            services.AddTransient<IAccountTransferService, AccountTransferService>();
-            services.AddTransient<IAccountManagementService, AccountManagementService>();
         }
 
         private static void RegisterCurrenciesApi(IServiceCollection services, IConfiguration configuration)

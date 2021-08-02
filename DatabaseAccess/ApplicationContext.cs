@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
+using DatabaseAccess.Entities.Files;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace DatabaseAccess
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<FileModel> Files { get; set; }
 
         public ApplicationContext(
             IServiceProvider serviceProvider,
@@ -58,9 +60,18 @@ namespace DatabaseAccess
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            ConfigureUser(builder);
             ConfigureAccount(builder);
             ConfigureQuiz(builder);
             CreateSeededUser(builder);
+        }
+
+        private void ConfigureUser(ModelBuilder builder)
+        {
+            builder.Entity<User>()
+                .HasOne(x => x.Photo)
+                .WithOne()
+                .HasForeignKey<User>(x => x.PhotoId);
         }
 
         private static void ConfigureQuiz(ModelBuilder builder)

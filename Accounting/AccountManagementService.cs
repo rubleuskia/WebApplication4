@@ -2,41 +2,45 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
+using DatabaseAccess.Infrastructure.UnitOfWork;
 
 namespace Accounting
 {
     public class AccountManagementService : IAccountManagementService
     {
-        private readonly IAccountsRepository _accountsRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IAccountAcquiringService _accountAcquiringService;
         private readonly IAccountTransferService _accountTransferService;
 
         public AccountManagementService(
-            IAccountsRepository accountsRepository,
+            IUnitOfWork unitOfWork,
             IAccountAcquiringService accountAcquiringService,
             IAccountTransferService accountTransferService)
         {
-            _accountsRepository = accountsRepository;
+            _unitOfWork = unitOfWork;
             _accountAcquiringService = accountAcquiringService;
             _accountTransferService = accountTransferService;
         }
 
-        public async Task<Guid> CreateAccount(string userId, string currencyCharCode)
+        public async Task<Account> CreateAccount(string userId, string currencyCharCode)
         {
             var accountId = Guid.NewGuid();
-            await _accountsRepository.Add(new Account
+            await _unitOfWork.Accounts.Create(new Account
             {
                 Amount = 0,
                 Id = accountId,
                 UserId = userId,
                 CurrencyCharCode = currencyCharCode,
             });
-            return accountId;
+
+            await _unitOfWork.Commit();
+            return await _unitOfWork.Accounts.GetById(accountId);;
         }
 
-        public Task DeleteAccount(Guid accountId)
+        public async Task DeleteAccount(Guid accountId)
         {
-            return _accountsRepository.Delete(accountId);
+            await _unitOfWork.Accounts.Delete(accountId);
+            await _unitOfWork.Commit();
         }
 
         public Task Withdraw(Guid accountId, byte[] rowVersion, decimal amount)
@@ -45,10 +49,11 @@ namespace Accounting
             return _accountAcquiringService.Withdraw(accountId, default, amount);
         }
 
-        public Task Acquire(Guid accountId, byte[] rowVersion, decimal amount)
+        public async Task Acquire(Guid accountId, byte[] rowVersion, decimal amount)
         {
             AssertValidAmount(amount);
-            return _accountAcquiringService.Acquire(accountId, rowVersion, amount);
+            await _accountAcquiringService.Acquire(accountId, rowVersion, amount);
+            await _unitOfWork.Commit();
         }
 
         public Task Transfer(AccountTransferParameters parameters)
@@ -58,12 +63,12 @@ namespace Accounting
 
         public Task<Account> GetAccount(Guid accountId)
         {
-            return _accountsRepository.GetById(accountId);
+            return _unitOfWork.Accounts.GetById(accountId);
         }
 
         public Task<Account[]> GetAccounts(string userId)
         {
-            return _accountsRepository.GetAll(userId);
+            return _unitOfWork.Accounts.GetAll(userId);
         }
 
         public bool IsSupportCurrencyCharCode(string currencyCharCode)

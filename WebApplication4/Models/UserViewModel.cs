@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApplication4.Models
 {
@@ -12,5 +13,8 @@ namespace WebApplication4.Models
         [Required]
         [Range(1, 100)]
         public int? Age { get; set; }
+
+        public IFormFile Photo { get; set; }
+        public string PhotoPath { get; set; }
     }
 }

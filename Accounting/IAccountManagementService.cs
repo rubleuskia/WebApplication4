@@ -6,7 +6,7 @@ namespace Accounting
 {
     public interface IAccountManagementService
     {
-        Task<Guid> CreateAccount(string userId, string currencyCharCode);
+        Task<Account> CreateAccount(string userId, string currencyCharCode);
 
         Task DeleteAccount(Guid accountId);
 

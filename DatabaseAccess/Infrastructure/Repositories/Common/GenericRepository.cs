@@ -5,16 +5,14 @@ using System.Threading.Tasks;
 using DatabaseAccess.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace DatabaseAccess.Infrastructure.Repositories
+namespace DatabaseAccess.Infrastructure.Repositories.Common
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly ApplicationContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
         protected GenericRepository(ApplicationContext context)
         {
-            _context = context;
             _dbSet = context.Set<TEntity>();
         }
 
@@ -70,11 +68,6 @@ namespace DatabaseAccess.Infrastructure.Repositories
         private IQueryable<TEntity> Include(params Expression<Func<TEntity, object>>[] includeProperties)
         {
             return includeProperties.Aggregate(_dbSet.AsNoTracking(), (current, property) => current.Include(property));
-        }
-
-        public Task Commit()
-        {
-            return _context.SaveChangesAsync();
         }
     }
 }

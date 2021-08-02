@@ -48,7 +48,7 @@ namespace WebApplication4
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(); // web application root
 
             app.UseRouting();
 

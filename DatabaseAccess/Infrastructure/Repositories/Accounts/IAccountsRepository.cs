@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
-using DatabaseAccess.Infrastructure.Repositories;
+using DatabaseAccess.Infrastructure.Repositories.Common;
 
-namespace Accounting
+namespace DatabaseAccess.Infrastructure.Repositories.Accounts
 {
     public interface IAccountsRepository : IGenericRepository<Account>
     {

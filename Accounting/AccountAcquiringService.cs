@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Accounting.Exceptions;
 using Common;
 using Common.Accounting;
+using DatabaseAccess.Infrastructure.UnitOfWork;
 
 namespace Accounting
 {
@@ -11,18 +12,18 @@ namespace Accounting
     public class AccountAcquiringService : IAccountAcquiringService
     {
         private readonly IEventBus _eventBus;
-        private readonly IAccountsRepository _accountsRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AccountAcquiringService(IAccountsRepository accountsRepository, IEventBus eventBus)
+        public AccountAcquiringService(IUnitOfWork unitOfWork, IEventBus eventBus)
         {
-            _accountsRepository = accountsRepository;
+            _unitOfWork = unitOfWork;
             _eventBus = eventBus;
         }
 
         // transfer or direct (?)
         public async Task Withdraw(Guid accountId, byte[] rowVersion, decimal amount)
         {
-            var account = await _accountsRepository.GetById(accountId);
+            var account = await _unitOfWork.Accounts.GetById(accountId);
 
             if (account.Amount < amount)
             {
@@ -35,7 +36,7 @@ namespace Accounting
             }
 
             account.Amount -= amount;
-            await _accountsRepository.Update(account);
+            await _unitOfWork.Accounts.Update(account);
 
             _eventBus.Publish(new AccountWithdrawEvent
             {
@@ -47,12 +48,12 @@ namespace Accounting
 
         public async Task Acquire(Guid accountId, byte[] rowVersion, decimal amount)
         {
-            var account = await _accountsRepository.GetById(accountId);
+            var account = await _unitOfWork.Accounts.GetById(accountId);
 
             account.Amount += amount;
             account.RowVersion = rowVersion;
 
-            await _accountsRepository.Update(account);
+            await _unitOfWork.Accounts.Update(account);
 
             _eventBus.Publish(new AccountAcquiredEvent
             {

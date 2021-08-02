@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
+using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,16 +13,14 @@ namespace WebApplication4.Controllers
     [Authorize(Roles = ApplicationConstants.Roles.Administrator)]
     public class RolesController : Controller
     {
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<User> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RolesController(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
+        public RolesController(IUnitOfWork unitOfWork)
         {
-            _roleManager = roleManager;
-            _userManager = userManager;
+            _unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index() => View(_roleManager.Roles.ToArray());
+        public async Task<IActionResult> Index() => View(await _unitOfWork.Users.GetRoles());
 
         public IActionResult Create() => View();
 
@@ -34,7 +33,7 @@ namespace WebApplication4.Controllers
                 return View(name);
             }
 
-            IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(name));
+            IdentityResult result = await _unitOfWork.Users.CreateRole(name);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index");
@@ -51,35 +50,32 @@ namespace WebApplication4.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            IdentityRole role = await _roleManager.FindByIdAsync(id);
+            IdentityRole role = await _unitOfWork.Users.FindRoleById(id);
             if (role != null)
             {
-                await _roleManager.DeleteAsync(role);
+                await _unitOfWork.Users.DeleteRole(role);
             }
 
             return RedirectToAction("Index");
         }
 
-        public IActionResult UserList() => View(
-            _userManager.Users.Select(x =>
-                    new UserViewModel
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                    })
-                .ToArray());
+        public async Task<IActionResult> UserList()
+        {
+            var users = await _unitOfWork.Users.Get();
+            return View(users.Select(x => new UserViewModel {Id = x.Id, Email = x.Email,}).ToArray());
+        }
 
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            User user = await _userManager.FindByIdAsync(id);
+            User user = await _unitOfWork.Users.FindUserById(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var allRoles = _roleManager.Roles.ToList();
+            var userRoles = await  _unitOfWork.Users.GetUserRoleIds(user);
+            var allRoles = (await _unitOfWork.Users.GetRoles()).ToList();
             var model = new ChangeRoleViewModel
             {
                 UserId = user.Id,
@@ -94,18 +90,18 @@ namespace WebApplication4.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
-            User user = await _userManager.FindByIdAsync(userId);
+            User user = await _unitOfWork.Users.FindUserById(userId);
             if (user == null)
             {
                 return NotFound();
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var userRoles = await _unitOfWork.Users.GetUserRoleIds(user);
             var addedRoles = roles.Except(userRoles);
             var removedRoles = userRoles.Except(roles);
 
-            await _userManager.AddToRolesAsync(user, addedRoles);
-            await _userManager.RemoveFromRolesAsync(user, removedRoles);
+            await _unitOfWork.Users.AddToRolesAsync(user, addedRoles);
+            await _unitOfWork.Users.RemoveFromRolesAsync(user, removedRoles);
 
             return RedirectToAction("UserList");
 

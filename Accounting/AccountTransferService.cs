@@ -2,23 +2,24 @@ using System.Threading.Tasks;
 using Common;
 using Common.Accounting;
 using Currencies.Common.Conversion;
+using DatabaseAccess.Infrastructure.UnitOfWork;
 
 namespace Accounting
 {
     public class AccountTransferService : IAccountTransferService
     {
         private readonly IEventBus _eventBus;
-        private readonly IAccountsRepository _accountsRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IAccountAcquiringService _accountAcquiringService;
         private readonly ICurrencyConversionService _currencyConversionService;
 
         public AccountTransferService(
-            IAccountsRepository accountsRepository,
+            IUnitOfWork unitOfWork,
             IAccountAcquiringService accountAcquiringService,
             ICurrencyConversionService currencyConversionService,
             IEventBus eventBus)
         {
-            _accountsRepository = accountsRepository;
+            _unitOfWork = unitOfWork;
             _accountAcquiringService = accountAcquiringService;
             _currencyConversionService = currencyConversionService;
             _eventBus = eventBus;
@@ -26,8 +27,8 @@ namespace Accounting
 
         public async Task Transfer(AccountTransferParameters parameters)
         {
-            var fromAccount = await _accountsRepository.GetById(parameters.FromAccount);
-            var toAccount = await _accountsRepository.GetById(parameters.ToAccount);
+            var fromAccount = await _unitOfWork.Accounts.GetById(parameters.FromAccount);
+            var toAccount = await _unitOfWork.Accounts.GetById(parameters.ToAccount);
 
             // create guid
             // account1.LockTransactions(guid); | account.State = TransferInprogres
