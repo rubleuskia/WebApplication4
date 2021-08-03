@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Users.Models;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;

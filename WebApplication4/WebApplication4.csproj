@@ -7,6 +7,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Accounting\Accounting.csproj" />
       <ProjectReference Include="..\Common\Common.csproj" />
+      <ProjectReference Include="..\Core\Core.csproj" />
       <ProjectReference Include="..\Currencies\Currencies.csproj" />
       <ProjectReference Include="..\TelegramBot\TelegramBot.csproj" />
     </ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
-using DatabaseAccess.Infrastructure.Repositories;
+using DatabaseAccess.Entities.Files;
 using DatabaseAccess.Infrastructure.Repositories.Accounts;
+using DatabaseAccess.Infrastructure.Repositories.Common;
 using DatabaseAccess.Infrastructure.Repositories.Users;
 
 namespace DatabaseAccess.Infrastructure.UnitOfWork
@@ -9,7 +10,7 @@ namespace DatabaseAccess.Infrastructure.UnitOfWork
     {
         IAccountsRepository Accounts { get; }
         IUsersRepository Users { get; }
-        IFilesRepository Files { get; }
+        IGenericRepository<FileModel> Files { get; }
 
         Task Commit();
     }

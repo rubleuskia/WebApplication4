@@ -2,6 +2,8 @@ using System;
 using Accounting;
 using Accounting.Tracking;
 using Common;
+using Core.Files;
+using Core.Users;
 using Currencies.Apis.Byn;
 using Currencies.Apis.Rub;
 using Currencies.Common;
@@ -11,8 +13,8 @@ using Currencies.Common.Infos;
 using DatabaseAccess;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
-using DatabaseAccess.Infrastructure.Repositories;
 using DatabaseAccess.Infrastructure.Repositories.Accounts;
+using DatabaseAccess.Infrastructure.Repositories.Common;
 using DatabaseAccess.Infrastructure.Repositories.Users;
 using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +23,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TelegramBot;
 using WebApplication4.Options;
+using WebApplication4.Services;
 
 namespace WebApplication4.Extensions
 {
@@ -36,6 +39,10 @@ namespace WebApplication4.Extensions
             services.AddTransient<IBeforeCommitHandler, UpdateEntityBeforeCommitHandler>();
             services.AddTransient<IBeforeCommitHandler, VersionedEntityBeforeCommitHandler>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IAccountsRepository, AccountsRepository>();
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)
@@ -45,9 +52,9 @@ namespace WebApplication4.Extensions
 
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IFilesRepository, FilesRepository>();
-            services.AddTransient<IUsersRepository, UsersRepository>();
-            services.AddTransient<IAccountsRepository, AccountsRepository>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IStaticFilesService, StaticFilesService>();
+            services.AddTransient<IFilesService, FilesService>();
             services.AddTransient<ICurrencyInfoService, CurrencyInfoService>();
             services.AddTransient<IAccountAcquiringService, AccountAcquiringService>();
             services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();

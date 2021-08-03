@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
-namespace WebApplication4.Models
+namespace Core.Users.Models
 {
     public class UserViewModel
     {
@@ -15,6 +15,7 @@ namespace WebApplication4.Models
         public int? Age { get; set; }
 
         public IFormFile Photo { get; set; }
+
         public string PhotoPath { get; set; }
     }
 }

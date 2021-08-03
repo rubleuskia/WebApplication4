@@ -1,58 +1,29 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using DatabaseAccess;
-using DatabaseAccess.Entities;
-using DatabaseAccess.Entities.Files;
-using DatabaseAccess.Infrastructure.UnitOfWork;
+using Core.Users;
+using Core.Users.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication4.Models;
+using WebApplication4.Services;
 
 namespace WebApplication4.Controllers
 {
     [Authorize(Roles = ApplicationConstants.Roles.Administrator)]
     public class UsersController : Controller
     {
-        // private readonly UserManager<User> _userManager;
-        private readonly ApplicationContext _context;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _environment;
+        private readonly IStaticFilesService _staticFilesService;
+        private readonly IUserService _userService;
 
-        public UsersController(IUnitOfWork unitOfWork, IWebHostEnvironment environment, ApplicationContext context)
+        public UsersController(IStaticFilesService staticFilesService, IUserService userService)
         {
-            _unitOfWork = unitOfWork;
-            _environment = environment;
-            _context = context;
+            _staticFilesService = staticFilesService;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var users = await _unitOfWork.Users.Get();
-            var result = new List<UserViewModel>();
-            foreach (var user in users)
-            {
-                result.Add(new UserViewModel
-                {
-                    Age = user.Age,
-                    Id = user.Id,
-                    Email = user.Email,
-                    PhotoPath = await GetPhotoPath(user),
-                });
-            }
-
-            return View(result.ToArray());
-        }
-
-        private async Task<string> GetPhotoPath(User x)
-        {
-            var path = x.PhotoId.HasValue ? (await _unitOfWork.Files.GetById(x.PhotoId.Value)).Path : null;
-            return $"~/{path}";
+            return View(await _userService.GetUsers());
         }
 
         [HttpGet]
@@ -63,35 +34,25 @@ namespace WebApplication4.Controllers
                 return BadRequest();
             }
 
-            var user = await _unitOfWork.Users.FindUserById(id);
-            if (user == null)
+            var userModel = await _userService.FindUserById(id);
+            if (userModel == null)
             {
                 return BadRequest();
             }
 
-            return View("UserDetails", new UserViewModel
-            {
-                Age = user.Age,
-                Email = user.Email,
-                Id = user.Id,
-            });
+            return View("UserDetails", userModel);
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var user = await _unitOfWork.Users.FindUserById(id);
-            if (user == null)
+            var userModel = await _userService.FindUserById(id);
+            if (userModel == null)
             {
                 return BadRequest();
             }
 
-            return View(new UserViewModel
-            {
-                Age = user.Age,
-                Email = user.Email,
-                Id = user.Id,
-            });
+            return View(userModel);
         }
 
         [HttpPost]
@@ -102,38 +63,8 @@ namespace WebApplication4.Controllers
                 return BadRequest();
             }
 
-            var userToUpdate = await _unitOfWork.Users.FindUserById(userViewModel.Id);
-            if (userToUpdate == null)
-            {
-                return BadRequest();
-            }
-
-            var uploadedFile = userViewModel.Photo;
-            string path = "/files/" + uploadedFile.FileName;
-            await using (var fileStream = new FileStream(_environment.WebRootPath + path, FileMode.Create))
-            {
-                await uploadedFile.CopyToAsync(fileStream);
-            }
-
-            var fileId = Guid.NewGuid();
-            var file = new FileModel
-            {
-                Id = fileId,
-                Name = uploadedFile.FileName,
-                Path = path,
-            };
-
-            await _context.Files.AddAsync(file);
-            await _context.SaveChangesAsync();
-
-            userToUpdate.Age = userViewModel.Age.Value;
-            userToUpdate.Email = userViewModel.Email;
-            userToUpdate.UserName = userViewModel.Email;
-            userToUpdate.PhotoId = fileId;
-
-            await _unitOfWork.Users.Update(userToUpdate);
-            await _unitOfWork.Commit();
-
+            userViewModel.PhotoPath = await _staticFilesService.SaveImage(userViewModel.Photo);
+            await _userService.Update(userViewModel);
             return RedirectToAction("Index");
         }
 
@@ -151,14 +82,7 @@ namespace WebApplication4.Controllers
                 return BadRequest();
             }
 
-            var user = new User
-            {
-                Age = model.Age.Value,
-                Email = model.Email,
-                UserName = model.Email
-            };
-
-            IdentityResult result = await _unitOfWork.Users.Create(user, model.Password);
+            IdentityResult result = await _userService.Create(model);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index");

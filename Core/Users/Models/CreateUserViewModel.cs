@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication4.Models
+namespace Core.Users.Models
 {
     public class CreateUserViewModel
     {

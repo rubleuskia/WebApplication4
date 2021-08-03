@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using DatabaseAccess.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication4.Models;
 
 namespace WebApplication4.Controllers
 {
+    [AllowAnonymous]
     public class UserAccountController : Controller
     {
         private readonly SignInManager<User> _signInManager;

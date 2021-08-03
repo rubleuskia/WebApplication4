@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot", "TelegramBot\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAccess", "DatabaseAccess\DatabaseAccess.csproj", "{D66B88D6-0D9D-4A29-B4A6-68052EE4387E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{4ABC7807-B5BA-413F-8E5D-40330DCD4EA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{D66B88D6-0D9D-4A29-B4A6-68052EE4387E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D66B88D6-0D9D-4A29-B4A6-68052EE4387E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D66B88D6-0D9D-4A29-B4A6-68052EE4387E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ABC7807-B5BA-413F-8E5D-40330DCD4EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ABC7807-B5BA-413F-8E5D-40330DCD4EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ABC7807-B5BA-413F-8E5D-40330DCD4EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ABC7807-B5BA-413F-8E5D-40330DCD4EA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

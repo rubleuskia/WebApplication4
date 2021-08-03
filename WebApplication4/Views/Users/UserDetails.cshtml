@@ -1,4 +1,4 @@
-@model UserViewModel;
+@model Core.Users.Models.UserViewModel;
 
 <div class="container">
   <div class="row">
@@ -12,6 +12,15 @@
         <div class="mb-3">
           <label for="age-input" class="form-label">Age</label>
           <input type="text" value="@Model.Age" id="age-input" class="form-control" placeholder="Age">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Photo</label>
+          <p>
+              @if (Model.PhotoPath != null)
+              {
+                <img src="@Model.PhotoPath" alt="">
+              }
+          </p>
         </div>
       </fieldset>
       <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a>
