@@ -8,4 +8,16 @@
       <ProjectReference Include="..\DatabaseAccess\DatabaseAccess.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="10.1.1" />
+      <PackageReference Include="Flurl" Version="3.0.2" />
+      <PackageReference Include="Flurl.Http" Version="3.2.0" />
+      <PackageReference Include="Telegram.Bot" Version="16.0.0" />
+      <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="0.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Currencies" />
+    </ItemGroup>
+
 </Project>

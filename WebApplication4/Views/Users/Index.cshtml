@@ -22,7 +22,7 @@
           <div class="card shadow-sm">
             @if (user.PhotoPath != null)
             {
-              <img class="img-thumbnail" src="@user.PhotoPath" height="200" width="200" alt="">
+              <img class="img-thumbnail" src="@Url.Content(user.PhotoPath)" height="200" width="200" alt="">
             }
             else
             {

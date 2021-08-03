@@ -56,15 +56,19 @@ namespace WebApplication4.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UserViewModel userViewModel)
+        public async Task<IActionResult> Update(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            userViewModel.PhotoPath = await _staticFilesService.SaveImage(userViewModel.Photo);
-            await _userService.Update(userViewModel);
+            if (model.Photo != null)
+            {
+                model.PhotoPath = await _staticFilesService.SaveImage(model.Photo);
+            }
+
+            await _userService.Update(model);
             return RedirectToAction("Index");
         }
 

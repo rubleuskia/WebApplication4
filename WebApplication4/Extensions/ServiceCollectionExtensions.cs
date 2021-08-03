@@ -1,15 +1,17 @@
 using System;
-using Accounting;
-using Accounting.Tracking;
-using Common;
+using Core.Accounting;
+using Core.Accounting.Tracking;
+using Core.Currencies.Apis.Byn;
+using Core.Currencies.Apis.Rub;
+using Core.Currencies.Common;
+using Core.Currencies.Common.Caching;
+using Core.Currencies.Common.Conversion;
+using Core.Currencies.Common.Infos;
+using Core.EventBus;
 using Core.Files;
+using Core.MappingProfiles;
+using Core.TelegramBot;
 using Core.Users;
-using Currencies.Apis.Byn;
-using Currencies.Apis.Rub;
-using Currencies.Common;
-using Currencies.Common.Caching;
-using Currencies.Common.Conversion;
-using Currencies.Common.Infos;
 using DatabaseAccess;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
@@ -21,7 +23,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TelegramBot;
 using WebApplication4.Options;
 using WebApplication4.Services;
 
@@ -29,6 +30,11 @@ namespace WebApplication4.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void RegisterAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(UserProfile).Assembly);
+        }
+
         public static void RegisterEntityFramework(this IServiceCollection services, IConfiguration configuration)
         {
             string connection = configuration.GetConnectionString("DefaultConnection");

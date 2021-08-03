@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Core.Files;
 using Core.Users.Models;
 using DatabaseAccess.Entities;
@@ -11,12 +12,14 @@ namespace Core.Users
     public class UserService : IUserService
     {
         private readonly IFilesService _filesService;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IUnitOfWork unitOfWork, IFilesService filesService)
+        public UserService(IUnitOfWork unitOfWork, IFilesService filesService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _filesService = filesService;
+            _mapper = mapper;
         }
 
         public async Task<UserViewModel> FindUserById(string userId)
@@ -45,36 +48,27 @@ namespace Core.Users
                 return;
             }
 
-            userToUpdate.Age = model.Age.Value;
-            userToUpdate.Email = model.Email;
-            userToUpdate.UserName = model.Email;
-            userToUpdate.PhotoId = await _filesService.SaveFile(model.Photo.FileName, model.PhotoPath);
+            if (model.Photo != null && !string.IsNullOrEmpty(model.PhotoPath))
+            {
+                userToUpdate.PhotoId = await _filesService.SaveFile(model.Photo.FileName, model.PhotoPath);
+            }
 
+            _mapper.Map(model, userToUpdate);
             await _unitOfWork.Users.Update(userToUpdate);
             await _unitOfWork.Commit();
         }
 
         public Task<IdentityResult> Create(CreateUserViewModel model)
         {
-            var user = new User
-            {
-                Age = model.Age.Value,
-                Email = model.Email,
-                UserName = model.Email
-            };
-
+            var user = _mapper.Map<User>(model);
             return _unitOfWork.Users.Create(user, model.Password);
         }
 
         private async Task<UserViewModel> CreateViewModel(User user)
         {
-            return new()
-            {
-                Age = user.Age,
-                Id = user.Id,
-                Email = user.Email,
-                PhotoPath = await GetPhotoPath(user),
-            };
+            var model = _mapper.Map<UserViewModel>(user);
+            model.PhotoPath = await GetPhotoPath(user);
+            return model;
         }
 
         private async Task<string> GetPhotoPath(User user)

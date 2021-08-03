@@ -5,14 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Accounting\Accounting.csproj" />
-      <ProjectReference Include="..\Common\Common.csproj" />
       <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\Currencies\Currencies.csproj" />
-      <ProjectReference Include="..\TelegramBot\TelegramBot.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">
         <PrivateAssets>all</PrivateAssets>

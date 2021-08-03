@@ -17,7 +17,7 @@ namespace Core.Files
         public async Task<string> GetFilePath(Guid fileId)
         {
             var file = await _unitOfWork.Files.GetById(fileId);
-            return file.Path;
+            return $"~/{file.Path}";
         }
 
         public async Task<Guid> SaveFile(string fileName, string filePath)
