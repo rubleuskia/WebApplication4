@@ -223,6 +223,9 @@ namespace DatabaseAccess.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("DatabasePhoto")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");

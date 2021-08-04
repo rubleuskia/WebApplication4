@@ -1,26 +1,29 @@
 using System;
-using Accounting;
-using Accounting.Tracking;
-using Common;
-using Currencies.Apis.Byn;
-using Currencies.Apis.Rub;
-using Currencies.Common;
-using Currencies.Common.Caching;
-using Currencies.Common.Conversion;
-using Currencies.Common.Infos;
+using Core.Accounting;
+using Core.Accounting.Tracking;
+using Core.Common;
+using Core.Currencies.Apis.Byn;
+using Core.Currencies.Apis.Rub;
+using Core.Currencies.Common;
+using Core.Currencies.Common.Caching;
+using Core.Currencies.Common.Conversion;
+using Core.Currencies.Common.Infos;
+using Core.Files;
+using Core.TelegramBot;
+using Core.Users;
 using DatabaseAccess;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
-using DatabaseAccess.Infrastructure.Repositories;
 using DatabaseAccess.Infrastructure.Repositories.Accounts;
+using DatabaseAccess.Infrastructure.Repositories.Common;
 using DatabaseAccess.Infrastructure.Repositories.Users;
 using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TelegramBot;
 using WebApplication4.Options;
+using WebApplication4.Services;
 
 namespace WebApplication4.Extensions
 {
@@ -36,6 +39,10 @@ namespace WebApplication4.Extensions
             services.AddTransient<IBeforeCommitHandler, UpdateEntityBeforeCommitHandler>();
             services.AddTransient<IBeforeCommitHandler, VersionedEntityBeforeCommitHandler>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddTransient<IUsersRepository, UsersRepository>();
+            services.AddTransient<IAccountsRepository, AccountsRepository>();
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)
@@ -45,9 +52,9 @@ namespace WebApplication4.Extensions
 
         public static void RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<IFilesRepository, FilesRepository>();
-            services.AddTransient<IUsersRepository, UsersRepository>();
-            services.AddTransient<IAccountsRepository, AccountsRepository>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IFileService, FileService>();
             services.AddTransient<ICurrencyInfoService, CurrencyInfoService>();
             services.AddTransient<IAccountAcquiringService, AccountAcquiringService>();
             services.AddTransient<ICurrencyConversionService, CurrencyConversionService>();
@@ -59,6 +66,8 @@ namespace WebApplication4.Extensions
             services.AddSingleton<ICurrenciesApiCacheService, CurrenciesApiCacheService>();
             services.AddSingleton<IAccountOperationsTrackingService, AccountOperationsTrackingService>();
             services.AddSingleton<GetNowAtSite>(() => DateTime.UtcNow);
+
+            services.AddTransient<IStaticFilesService, StaticFilesService>();
 
             RegisterCurrenciesApi(services, configuration);
         }

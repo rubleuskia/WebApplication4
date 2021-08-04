@@ -11,7 +11,7 @@ namespace DatabaseAccess.Infrastructure.Repositories.Common
     {
         private readonly DbSet<TEntity> _dbSet;
 
-        protected GenericRepository(ApplicationContext context)
+        public GenericRepository(ApplicationContext context)
         {
             _dbSet = context.Set<TEntity>();
         }

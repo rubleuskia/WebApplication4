@@ -24,11 +24,14 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.IsInRole(WebApplicationConstants.Roles.Administrator))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
                         </li>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Index">Accounts</a>
                         </li>

@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Core.TelegramBot;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using TelegramBot;
 using WebApplication4.Options;
 
 namespace WebApplication4.HostedServices

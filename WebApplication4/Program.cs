@@ -11,7 +11,7 @@ namespace WebApplication4
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.File("Logs/logs.txt", rollingInterval: RollingInterval.Minute)
+                .WriteTo.File("Logs/logs.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             CreateHostBuilder(args).Build().Run();

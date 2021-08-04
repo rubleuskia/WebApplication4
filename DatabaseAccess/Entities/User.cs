@@ -13,6 +13,8 @@ namespace DatabaseAccess.Entities
 
         public Guid? PhotoId { get; set; }
 
+        public byte[] DatabasePhoto { get; set; }
+
         public ICollection<Account> Accounts { get; set; }
     }
 }

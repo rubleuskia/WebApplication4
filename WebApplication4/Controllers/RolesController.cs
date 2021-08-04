@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Users;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,7 @@ using WebApplication4.Models;
 
 namespace WebApplication4.Controllers
 {
-    [Authorize(Roles = ApplicationConstants.Roles.Administrator)]
+    [Authorize(Roles = WebApplicationConstants.Roles.Administrator)]
     public class RolesController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
