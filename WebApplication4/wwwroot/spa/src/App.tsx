@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Links from './components/accounts';
 import Accounts from './components/accounts';
 import { Currency } from './types/accounts';
 
