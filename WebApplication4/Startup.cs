@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -14,12 +15,14 @@ namespace WebApplication4
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment _webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = _webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -35,7 +38,7 @@ namespace WebApplication4
             });
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "wwwroot/spa";
+                configuration.RootPath = $"{WebHostEnvironment.WebRootPath}/spa";
             });
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -100,15 +103,24 @@ namespace WebApplication4
                     defaults: new { controller = "Images", action = "Download" });
             });
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "wwwroot/spa";
-
-                if (env.IsDevelopment())
+            app.MapWhen(
+                context => context.Request.Path.StartsWithSegments("/spa", StringComparison.OrdinalIgnoreCase) ||
+                           context.Request.Path.StartsWithSegments("/static", StringComparison.OrdinalIgnoreCase) ||
+                           context.Request.Path.StartsWithSegments("/sockjs-node", StringComparison.OrdinalIgnoreCase)
+                ,
+                cfg =>
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    cfg.UseSpa(spa =>
+                    {
+                        spa.Options.SourcePath = $"{env.WebRootPath}/spa";
+
+                        if (env.IsDevelopment())
+                        {
+                            spa.UseReactDevelopmentServer(npmScript: "start");
+                        }
+                    });
                 }
-            });
+            );
         }
     }
 }

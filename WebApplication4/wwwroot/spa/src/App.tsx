@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Links from './components/links';
 
 function App() {
   return (
@@ -8,16 +9,13 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload (modified177).
+          Edit <code>src/App.tsx</code> and save to reload (modified177111).
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Links links={[
+          { text: "Learn React", link: "https://reactjs.org" },
+          { text: "Learn React Copy", link: "https://reactjs.org" },
+          { text: "Learn React Copy Copy", link: "https://reactjs.org" },
+        ]} />
       </header>
     </div>
   );
