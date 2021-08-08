@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.8" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.8" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,6 +22,29 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\files" />
+      <Folder Include="wwwroot\spa" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\asset-manifest.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\favicon.ico" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\index.html" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\logo192.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\logo512.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\manifest.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\robots.txt" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\css\main.a617e044.chunk.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\css\main.a617e044.chunk.css.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\2.0776a14c.chunk.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\2.0776a14c.chunk.js.LICENSE.txt" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\2.0776a14c.chunk.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\3.dd157172.chunk.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\3.dd157172.chunk.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\main.9ed257af.chunk.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\main.9ed257af.chunk.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\runtime-main.bdb33c4a.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\js\runtime-main.bdb33c4a.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\spa\build\static\media\logo.6ce24c58.svg" />
     </ItemGroup>
 
 </Project>

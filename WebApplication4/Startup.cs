@@ -2,6 +2,7 @@ using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -24,13 +25,17 @@ namespace WebApplication4
         {
             services.RegisterDependencies(Configuration);
             services.RegisterOptions(Configuration);
-            services.RegisterEntityFramework(Configuration);
+            services.RegisterEntityFramework();
             services.AddHttpContextAccessor();
             services.AddHostedService<TelegramHostedService>();
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/UserAccount/Login";
                 options.AccessDeniedPath = "/UserAccount/Login";
+            });
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "wwwroot/spa";
             });
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -84,6 +89,8 @@ namespace WebApplication4
                 RequestPath = "/ProtectedImages",
             });
 
+            app.UseSpaStaticFiles();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -91,6 +98,16 @@ namespace WebApplication4
                     name: "file-browser",
                     pattern: "MyImages/{fileName}",
                     defaults: new { controller = "Images", action = "Download" });
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "wwwroot/spa";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }
