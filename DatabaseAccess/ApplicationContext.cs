@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DatabaseAccess.Entities;
+using DatabaseAccess.Entities.CascadeDeletion;
 using DatabaseAccess.Entities.Files;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,7 @@ namespace DatabaseAccess
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<FileModel> Files { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         public ApplicationContext(
             IServiceProvider serviceProvider,
@@ -64,6 +66,21 @@ namespace DatabaseAccess
             ConfigureAccount(builder);
             ConfigureQuiz(builder);
             CreateSeededUser(builder);
+            ConfigureBooks(builder);
+        }
+
+        private void ConfigureBooks(ModelBuilder builder)
+        {
+            builder.Entity<Book>()
+                .HasMany(x => x.Pages)
+                .WithOne()
+                .HasForeignKey(x => x.BookId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Page>()
+                .HasOne(x => x.Book)
+                .WithMany(b => b.Pages)
+                .HasForeignKey(x => x.BookId);
         }
 
         private void ConfigureUser(ModelBuilder builder)
@@ -89,8 +106,7 @@ namespace DatabaseAccess
             builder.Entity<QuizQuestionUserAnswer>()
                 .HasOne(x => x.QuizQuestion)
                 .WithMany()
-                .HasForeignKey(x => x.QuizQuestionId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(x => x.QuizQuestionId);
 
             builder.Entity<QuizQuestionUserAnswer>()
                 .HasOne(x => x.QuizCompletionHistory)

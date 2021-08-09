@@ -6,8 +6,6 @@ Param(
 
 Set-Location -Path "./WebApplication4"
 
-& dotnet restore
-& dotnet build
-& dotnet ef migrations $BuildArguments --project ../DatabaseAccess
+dotnet ef migrations $BuildArguments --project ../DatabaseAccess
 
 Set-Location -Path "./../"
