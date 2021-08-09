@@ -26,6 +26,14 @@ namespace WebApplication4
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "MyPolicy",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    });
+            });
             services.RegisterDependencies(Configuration);
             services.RegisterOptions(Configuration);
             services.RegisterEntityFramework();
@@ -76,7 +84,7 @@ namespace WebApplication4
             });
 
             app.UseRouting();
-
+            app.UseCors("MyPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 

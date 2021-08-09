@@ -5,7 +5,11 @@ export enum Currency {
 }
 
 export interface Account {
-    name: string;
+    id: string;
     amount: number;
-    currency: Currency,
+    currencyCharCode: string,
+    userId: string,
+    rowVersion: string,
+    createdAt: string,
+    updatedAt: string,
 }

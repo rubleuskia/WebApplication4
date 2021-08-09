@@ -12,11 +12,7 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to reload (modified177111).
         </p>
-        <Accounts accounts={[
-          { name: "Account 1", currency: Currency.BYN, amount: 1000 },
-          { name: "Account 2", currency: Currency.USD, amount: 5000 },
-          { name: "Account 3", currency: Currency.EUR, amount: 7000 },
-        ]} />
+        <Accounts />
       </header>
     </div>
   );

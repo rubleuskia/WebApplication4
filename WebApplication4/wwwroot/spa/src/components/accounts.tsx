@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
-import { Currency, Account } from './../types/accounts';
+
+import React, { useEffect, useState } from 'react';
+import { httpGet } from '../services/api';
+import { Account } from './../types/accounts';
 import AccountDetails from './accountDetails';
 
-const Accounts = (props: { accounts: Account[] }) => {
-    let [accounts, setAccounts] = useState(props.accounts);
+const Accounts = () => {
+    let [accounts, setAccounts] = useState<Account[]>([]);
+    let [error, setError] = useState<string>("");
 
-    const createNew = () => {
-        setAccounts([...accounts, { amount: 100, currency: Currency.BYN, name: "New account " + (accounts.length + 1) }]);
-    };
+    useEffect(() => {
+        httpGet<Account[]>("accountsApi").then(accounts => {
+            setAccounts(accounts);
+        }).catch((e: Error) => {
+            debugger;
+            setError(e.message);
+        });
+    })
 
-    const deleteAccount = (name: string) => {
-        setAccounts(accounts.filter(account => account.name != name));
+    const deleteAccount = (id: string) => {
+        setAccounts(accounts.filter(account => account.id != id));
     }
 
     return (
         <>
-            <button onClick={createNew}>Create new!</button>
+            {error && error}
             {accounts.map(account =>
                 <AccountDetails data={account} delete={deleteAccount} />
             )}
