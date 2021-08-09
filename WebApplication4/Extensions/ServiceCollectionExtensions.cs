@@ -9,6 +9,7 @@ using Core.Currencies.Common.Caching;
 using Core.Currencies.Common.Conversion;
 using Core.Currencies.Common.Infos;
 using Core.Files;
+using Core.Mappings;
 using Core.TelegramBot;
 using Core.Users;
 using DatabaseAccess;
@@ -29,6 +30,11 @@ namespace WebApplication4.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void RegisterAutoMapper(this IServiceCollection services)
+        {
+            services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
+        }
+
         public static void RegisterEntityFramework(this IServiceCollection services, IConfiguration configuration)
         {
             string connection = configuration.GetConnectionString("DefaultConnection");

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Users;
+using Core.Users.Model;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authorization;

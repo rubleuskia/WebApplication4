@@ -27,6 +27,7 @@ namespace WebApplication4
             services.RegisterEntityFramework(Configuration);
             services.AddHttpContextAccessor();
             services.AddHostedService<TelegramHostedService>();
+            services.RegisterAutoMapper();
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/UserAccount/Login";
