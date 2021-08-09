@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,24 +112,24 @@ namespace WebApplication4
                     defaults: new { controller = "Images", action = "Download" });
             });
 
-            app.MapWhen(
-                context => context.Request.Path.StartsWithSegments("/spa", StringComparison.OrdinalIgnoreCase) ||
-                           context.Request.Path.StartsWithSegments("/static", StringComparison.OrdinalIgnoreCase) ||
-                           context.Request.Path.StartsWithSegments("/sockjs-node", StringComparison.OrdinalIgnoreCase)
-                ,
-                cfg =>
+            app.MapWhen(IsSpaRoute, cfg =>
+            {
+                cfg.UseSpa(spa =>
                 {
-                    cfg.UseSpa(spa =>
-                    {
-                        spa.Options.SourcePath = $"{env.WebRootPath}/spa";
+                    spa.Options.SourcePath = $"{env.WebRootPath}/spa";
 
-                        if (env.IsDevelopment())
-                        {
-                            spa.UseReactDevelopmentServer(npmScript: "start");
-                        }
-                    });
-                }
-            );
+                    if (env.IsDevelopment())
+                    {
+                        spa.UseReactDevelopmentServer(npmScript: "start");
+                    }
+                });
+            });
+        }
+
+        private static bool IsSpaRoute(HttpContext context)
+        {
+            return context.Request.Path.StartsWithSegments("/spa", StringComparison.OrdinalIgnoreCase) ||
+                   context.Request.Path.StartsWithSegments("/static", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
