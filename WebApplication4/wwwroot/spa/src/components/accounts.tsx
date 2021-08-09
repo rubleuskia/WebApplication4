@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { httpGet } from '../services/api';
 import { Account } from './../types/accounts';
@@ -15,7 +14,7 @@ const Accounts = () => {
             debugger;
             setError(e.message);
         });
-    })
+    }, [])
 
     const deleteAccount = (id: string) => {
         setAccounts(accounts.filter(account => account.id != id));
