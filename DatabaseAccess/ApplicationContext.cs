@@ -73,14 +73,15 @@ namespace DatabaseAccess
         {
             builder.Entity<Book>()
                 .HasMany(x => x.Pages)
-                .WithOne()
+                .WithOne(x => x.Book)
                 .HasForeignKey(x => x.BookId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Page>()
-                .HasOne(x => x.Book)
-                .WithMany(b => b.Pages)
-                .HasForeignKey(x => x.BookId);
+            builder.Entity<Letter>()
+                .HasOne(x => x.Page)
+                .WithMany(b => b.Letters)
+                .HasForeignKey(x => x.PageId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void ConfigureUser(ModelBuilder builder)
@@ -111,7 +112,8 @@ namespace DatabaseAccess
             builder.Entity<QuizQuestionUserAnswer>()
                 .HasOne(x => x.QuizCompletionHistory)
                 .WithMany(x => x.UserAnswers)
-                .HasForeignKey(x => x.QuizCompletionHistoryId);
+                .HasForeignKey(x => x.QuizCompletionHistoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<QuizQuestionUserAnswer>()
                 .HasOne(x => x.User)

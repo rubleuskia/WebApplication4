@@ -30,9 +30,9 @@ namespace WebApplication4.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void RegisterEntityFramework(this IServiceCollection services)
+        public static void RegisterEntityFramework(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(PrepareSqlConnection()));
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddTransient<IBeforeCommitHandler, CreateEntityBeforeCommitHandler>();
@@ -43,19 +43,6 @@ namespace WebApplication4.Extensions
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IAccountsRepository, AccountsRepository>();
-        }
-
-        private static SqlConnection PrepareSqlConnection()
-        {
-            var builder = new SqlConnectionStringBuilder
-            {
-                DataSource = "localhost",
-                UserID = "sa",
-                Password = "MyPass@word",
-                InitialCatalog = "WebAppDatabase"
-            };
-
-            return new SqlConnection(builder.ConnectionString);
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)

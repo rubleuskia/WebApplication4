@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210809104443_BooksWithPages")]
-    partial class BooksWithPages
+    [Migration("20210809143605_books12")]
+    partial class books12
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,23 +68,49 @@ namespace DatabaseAccess.Migrations
 
             modelBuilder.Entity("DatabaseAccess.Entities.CascadeDeletion.Book", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("DatabaseAccess.Entities.CascadeDeletion.Letter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CharCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<int>("PageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PageId");
+
+                    b.ToTable("Letter");
+                });
+
             modelBuilder.Entity("DatabaseAccess.Entities.CascadeDeletion.Page", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<Guid>("BookId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
@@ -508,13 +534,26 @@ namespace DatabaseAccess.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DatabaseAccess.Entities.CascadeDeletion.Letter", b =>
+                {
+                    b.HasOne("DatabaseAccess.Entities.CascadeDeletion.Page", "Page")
+                        .WithMany("Letters")
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Page");
+                });
+
             modelBuilder.Entity("DatabaseAccess.Entities.CascadeDeletion.Page", b =>
                 {
-                    b.HasOne("DatabaseAccess.Entities.CascadeDeletion.Book", null)
+                    b.HasOne("DatabaseAccess.Entities.CascadeDeletion.Book", "Book")
                         .WithMany("Pages")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("DatabaseAccess.Entities.QuizCompletionHistory", b =>
@@ -552,13 +591,13 @@ namespace DatabaseAccess.Migrations
                     b.HasOne("DatabaseAccess.Entities.QuizCompletionHistory", "QuizCompletionHistory")
                         .WithMany("UserAnswers")
                         .HasForeignKey("QuizCompletionHistoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DatabaseAccess.Entities.QuizQuestion", "QuizQuestion")
                         .WithMany()
                         .HasForeignKey("QuizQuestionId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DatabaseAccess.Entities.User", "User")
@@ -652,6 +691,11 @@ namespace DatabaseAccess.Migrations
             modelBuilder.Entity("DatabaseAccess.Entities.CascadeDeletion.Book", b =>
                 {
                     b.Navigation("Pages");
+                });
+
+            modelBuilder.Entity("DatabaseAccess.Entities.CascadeDeletion.Page", b =>
+                {
+                    b.Navigation("Letters");
                 });
 
             modelBuilder.Entity("DatabaseAccess.Entities.Quiz", b =>

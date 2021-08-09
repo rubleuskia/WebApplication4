@@ -37,7 +37,7 @@ namespace WebApplication4
             });
             services.RegisterDependencies(Configuration);
             services.RegisterOptions(Configuration);
-            services.RegisterEntityFramework();
+            services.RegisterEntityFramework(Configuration);
             services.AddHttpContextAccessor();
             services.AddHostedService<TelegramHostedService>();
             services.ConfigureApplicationCookie(options =>

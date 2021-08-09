@@ -4,14 +4,16 @@ using DatabaseAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210809142338_books1")]
+    partial class books1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -537,7 +539,7 @@ namespace DatabaseAccess.Migrations
                     b.HasOne("DatabaseAccess.Entities.CascadeDeletion.Page", "Page")
                         .WithMany("Letters")
                         .HasForeignKey("PageId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Page");
@@ -548,7 +550,7 @@ namespace DatabaseAccess.Migrations
                     b.HasOne("DatabaseAccess.Entities.CascadeDeletion.Book", "Book")
                         .WithMany("Pages")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Book");
