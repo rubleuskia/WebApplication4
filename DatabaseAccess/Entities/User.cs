@@ -16,5 +16,7 @@ namespace DatabaseAccess.Entities
         public byte[] DatabasePhoto { get; set; }
 
         public ICollection<Account> Accounts { get; set; }
+
+        public Guid FavoriteAccount { get; set; }
     }
 }

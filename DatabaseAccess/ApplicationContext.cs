@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using DatabaseAccess.BookStore;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Entities.Files;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DatabaseAccess
 {
+    // soft delete
     public class ApplicationContext : IdentityDbContext<User>
     {
         private readonly IServiceProvider _serviceProvider;
@@ -18,6 +20,7 @@ namespace DatabaseAccess
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<FileModel> Files { get; set; }
+        public DbSet<Book> Books { get; set; }
 
         public ApplicationContext(
             IServiceProvider serviceProvider,
@@ -64,6 +67,22 @@ namespace DatabaseAccess
             ConfigureAccount(builder);
             ConfigureQuiz(builder);
             CreateSeededUser(builder);
+            CreateBookStore(builder);
+        }
+
+        private void CreateBookStore(ModelBuilder builder)
+        {
+            builder.Entity<Book>()
+                .HasMany(x => x.Pages)
+                .WithOne(x => x.Book)
+                .HasForeignKey(x => x.BookId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Letter>()
+                .HasOne(x => x.Page)
+                .WithMany(x => x.Lettes)
+                .HasForeignKey(x => x.PageId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void ConfigureUser(ModelBuilder builder)
@@ -90,7 +109,7 @@ namespace DatabaseAccess
                 .HasOne(x => x.QuizQuestion)
                 .WithMany()
                 .HasForeignKey(x => x.QuizQuestionId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<QuizQuestionUserAnswer>()
                 .HasOne(x => x.QuizCompletionHistory)

@@ -16,3 +16,11 @@ namespace DatabaseAccess.Entities
         public byte[] RowVersion { get; set; }
     }
 }
+
+
+// Books -> pages -> letters // OK
+
+
+// User -> Account -> User //-> Account
+
+// delete user -> delete all accounts
