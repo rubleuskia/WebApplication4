@@ -33,6 +33,14 @@ namespace WebApplication4
                 options.LoginPath = "/UserAccount/Login";
                 options.AccessDeniedPath = "/UserAccount/Login";
             });
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: WebApplicationConstants.Cors.PolicyName,
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    });
+            });
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddDirectoryBrowser();
@@ -69,6 +77,8 @@ namespace WebApplication4
             });
 
             app.UseRouting();
+
+            app.UseCors(WebApplicationConstants.Cors.PolicyName);
 
             app.UseAuthentication();
             app.UseAuthorization();
