@@ -2,6 +2,7 @@ using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -41,6 +42,7 @@ namespace WebApplication4
                         builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                     });
             });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot/spa"; });
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddDirectoryBrowser();
@@ -102,6 +104,15 @@ namespace WebApplication4
                     name: "file-browser",
                     pattern: "MyImages/{fileName}",
                     defaults: new { controller = "Images", action = "Download" });
+            });
+
+            app.UseSpa(spa =>
+            {
+                if (env.IsDevelopment())
+                {
+                    spa.Options.SourcePath = $"{env.WebRootPath}/spa";
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }
