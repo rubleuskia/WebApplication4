@@ -1,7 +1,9 @@
+using System;
 using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,12 +16,14 @@ namespace WebApplication4
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -42,7 +46,11 @@ namespace WebApplication4
                         builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                     });
             });
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot/spa"; });
+            services.AddSpaStaticFiles(configuration =>
+            {
+                var publishPath = Environment.IsProduction() ? "/build" : string.Empty;
+                configuration.RootPath = $"{Environment.WebRootPath}/react/{publishPath}";
+            });
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddDirectoryBrowser();
@@ -106,14 +114,31 @@ namespace WebApplication4
                     defaults: new { controller = "Images", action = "Download" });
             });
 
-            app.UseSpa(spa =>
+            if (env.IsDevelopment())
             {
-                if (env.IsDevelopment())
+                app.UseSpa(spa =>
                 {
-                    spa.Options.SourcePath = $"{env.WebRootPath}/spa";
+
+                    spa.Options.SourcePath = $"{env.WebRootPath}/react";
                     spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+                });
+            }
+            else
+            {
+                app.MapWhen(IsReactRoute, appBuilder =>
+                {
+                    appBuilder.UseSpa(spa =>
+                    {
+                        spa.Options.SourcePath = $"{env.WebRootPath}/react/build";
+                    });
+                });
+            }
+        }
+
+        private static bool IsReactRoute(HttpContext context)
+        {
+            return context.Request.Path.StartsWithSegments("/react", StringComparison.OrdinalIgnoreCase) ||
+                   context.Request.Path.StartsWithSegments("/static", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
