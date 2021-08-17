@@ -1,8 +1,8 @@
-using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,8 +47,8 @@ namespace WebApplication4
 
             services.AddSpaStaticFiles(configuration =>
             {
-                var publishPath = WebHostEnvironment.IsProduction() ? "/build" : string.Empty;
-                configuration.RootPath = $"{WebHostEnvironment.WebRootPath}/react/{publishPath}";
+                var publishPath = WebHostEnvironment.IsProduction() ? "/dist" : string.Empty;
+                configuration.RootPath = $"{WebHostEnvironment.WebRootPath}/angular/{publishPath}";
             });
 
             services.AddControllersWithViews();
@@ -96,25 +96,20 @@ namespace WebApplication4
             {
                 app.UseSpa(spa =>
                 {
-                    spa.Options.SourcePath = $"{env.WebRootPath}/react";
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.Options.SourcePath = $"{env.WebRootPath}/angular";
+                    spa.UseAngularCliServer(npmScript: "start");
                 });
             }
             else
             {
-                app.MapWhen(IsSpaRoute, builder =>
+                app.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/angular"), builder =>
                 {
                     builder.UseSpa(spa =>
                     {
-                        spa.Options.SourcePath = $"{env.WebRootPath}/react/build";
+                        spa.Options.SourcePath = $"{env.WebRootPath}/angular/dist";
                     });
                 });
             }
-        }
-
-        private static bool IsSpaRoute(HttpContext context)
-        {
-            return context.Request.Path.StartsWithSegments("/react");
         }
     }
 }
