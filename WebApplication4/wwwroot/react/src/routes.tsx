@@ -6,7 +6,7 @@ import MainPage from "./components/mainPage";
 
 export const routes = [
     {
-        path: '/spa/accounts',
+        path: '/react/accounts',
         element: <Layout />,
         children: [
             { path: '/', element: <Accounts /> },
@@ -16,7 +16,7 @@ export const routes = [
         ]
     },
     {
-        path: '/spa',
+        path: '/react',
         element: <MainPage />,
     },
 ];

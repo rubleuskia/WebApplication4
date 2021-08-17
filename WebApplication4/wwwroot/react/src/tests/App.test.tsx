@@ -8,7 +8,7 @@ test('renders learn react link', () => {
   const accountsLink = screen.getByText("Accounts");
 
   expect(accountsLink).toBeInTheDocument();
-  expect(accountsLink.getAttribute("href")).toEqual("/spa/accounts");
+  expect(accountsLink.getAttribute("href")).toEqual("/react/accounts");
 });
 
 

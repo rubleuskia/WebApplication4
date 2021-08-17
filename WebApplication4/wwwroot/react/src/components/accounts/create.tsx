@@ -19,7 +19,7 @@ const Create = () => {
 
     const onSave = () => {
         createAccount(amount, currency).then(() => {
-            navigate(`/spa/accounts`);
+            navigate(`/react/accounts`);
         }).catch((e) => {
             setError(e.message);
         });

@@ -31,7 +31,7 @@ const Accounts = () => {
     }
 
     const showCreateView = () => {
-        navigate(`/spa/accounts/create`);
+        navigate(`/react/accounts/create`);
     }
 
     return (

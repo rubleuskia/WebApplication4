@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using WebApplication4.Extensions;
 using WebApplication4.HostedServices;
@@ -16,14 +14,14 @@ namespace WebApplication4
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
-            Environment = environment;
+            WebHostEnvironment = webHostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
-        public IWebHostEnvironment Environment { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -46,11 +44,13 @@ namespace WebApplication4
                         builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                     });
             });
+
             services.AddSpaStaticFiles(configuration =>
             {
-                var publishPath = Environment.IsProduction() ? "/build" : string.Empty;
-                configuration.RootPath = $"{Environment.WebRootPath}/react/{publishPath}";
+                var publishPath = WebHostEnvironment.IsProduction() ? "/build" : string.Empty;
+                configuration.RootPath = $"{WebHostEnvironment.WebRootPath}/react/{publishPath}";
             });
+
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddDirectoryBrowser();
@@ -62,11 +62,8 @@ namespace WebApplication4
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // | => | => | => | =>
-            //   <= | <= |
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -74,37 +71,18 @@ namespace WebApplication4
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles(); // web application root
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "files")),
-                RequestPath = "/MyImages",
-            });
-
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            // app.ConfigurePublicStaticFiles(env);
             app.UseRouting();
-
             app.UseCors(WebApplicationConstants.Cors.PolicyName);
-
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ProtectedStaticFiles")),
-                RequestPath = "/ProtectedStaticFiles"
-            });
-
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ProtectedStaticFiles")),
-                RequestPath = "/ProtectedImages",
-            });
-
+            // app.ConfigureProtectedStaticFiles(env);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -118,16 +96,15 @@ namespace WebApplication4
             {
                 app.UseSpa(spa =>
                 {
-
                     spa.Options.SourcePath = $"{env.WebRootPath}/react";
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 });
             }
             else
             {
-                app.MapWhen(IsReactRoute, appBuilder =>
+                app.MapWhen(IsSpaRoute, builder =>
                 {
-                    appBuilder.UseSpa(spa =>
+                    builder.UseSpa(spa =>
                     {
                         spa.Options.SourcePath = $"{env.WebRootPath}/react/build";
                     });
@@ -135,10 +112,9 @@ namespace WebApplication4
             }
         }
 
-        private static bool IsReactRoute(HttpContext context)
+        private static bool IsSpaRoute(HttpContext context)
         {
-            return context.Request.Path.StartsWithSegments("/react", StringComparison.OrdinalIgnoreCase) ||
-                   context.Request.Path.StartsWithSegments("/static", StringComparison.OrdinalIgnoreCase);
+            return context.Request.Path.StartsWithSegments("/react");
         }
     }
 }

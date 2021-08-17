@@ -21,7 +21,7 @@ const App = () => {
                 <li className="nav-item">
                   <a className="nav-link text-dark" href="/">Home</a>
                 </li>
-                <Link className="nav-link text-dark" to="/spa/accounts">Accounts</Link>
+                <Link className="nav-link text-dark" to="/react/accounts">Accounts</Link>
               </ul>
             </div>
           </div>
