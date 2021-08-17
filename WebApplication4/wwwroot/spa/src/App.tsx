@@ -1,8 +1,11 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Accounts from './components/accounts/accounts';
+import { Link, useRoutes } from 'react-router-dom';
+import { routes } from './routes';
 
 const App = () => {
+  const appRoutes = useRoutes(routes);
+
   return (
     <div className="App">
       <header>
@@ -18,9 +21,7 @@ const App = () => {
                 <li className="nav-item">
                   <a className="nav-link text-dark" href="/">Home</a>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link text-dark" href="/">Privacy</a>
-                </li>
+                <Link className="nav-link text-dark" to="/spa/accounts">Accounts</Link>
               </ul>
             </div>
           </div>
@@ -28,7 +29,7 @@ const App = () => {
       </header>
       <div className="container">
         <main role="main" className="pb-3">
-          <Accounts />
+          {appRoutes}
         </main>
       </div>
 

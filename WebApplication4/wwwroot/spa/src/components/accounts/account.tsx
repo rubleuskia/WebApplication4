@@ -1,4 +1,5 @@
 import { Button, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { AccountDto } from "../../types/accounts";
 import logo from './../../logo.svg';
 
@@ -19,7 +20,7 @@ const Account = (props: Props) => {
                         <h5 className="card-title">{account.amount}</h5>
                         {account.currencyName}
                     </Card.Text>
-                    <Button variant="primary m-1">Acquire</Button>
+                    <Link className="btn btn-primary m-1" to={`acquire/${account.id}`} state={account}>Acquire</Link>
                     <Button variant="primary m-1">Withdraw</Button>
                     <Button variant="primary m-1" onClick={() => onDelete(account.id)}>Delete</Button>
                 </Card.Body>

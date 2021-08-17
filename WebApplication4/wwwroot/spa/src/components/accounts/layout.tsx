@@ -1,6 +1,6 @@
-import { Button } from "react-bootstrap";
+import { Outlet } from "react-router-dom";
 
-const Header = () => {
+const Layout = () => {
     return (
         <>
             <section className="py-5 text-center container">
@@ -8,14 +8,12 @@ const Header = () => {
                     <div className="col-lg-6 col-md-8 mx-auto">
                         <h1 className="fw-light">Accounting solution</h1>
                         <p className="lead text-muted">Create, manage your accounts here</p>
-                        <p>
-                            <Button variant="primary m-1">Acquire</Button>
-                        </p>
                     </div>
                 </div>
             </section>
+            <Outlet />
         </>
     );
 }
 
-export default Header;
+export default Layout;

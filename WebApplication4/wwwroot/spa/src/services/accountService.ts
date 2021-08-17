@@ -1,5 +1,5 @@
 import { AccountDto } from "../types/accounts";
-import { httpGet } from "./requestApi";
+import { httpGet, httpPost } from "./requestApi";
 
 // export const accountsData: AccountDto[] = [
 //     { id: "1", amount: 100, currencyName: "US dollar" },
@@ -11,4 +11,10 @@ import { httpGet } from "./requestApi";
 
 export const fetchAccounts = () => {
     return httpGet<AccountDto[]>("accountsApi");
+}
+
+export const createAccount = (amount: number, currency: string) => {
+    return httpPost("accountsApi/create", {
+        body: { amount, currency },
+    });
 }

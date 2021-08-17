@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using Core.Accounting;
 using Core.Accounting.Dtos;
 using DatabaseAccess.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication4.Extensions;
 
 namespace WebApplication4.Api
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountsApiController : ControllerBase
@@ -21,11 +20,10 @@ namespace WebApplication4.Api
             _managementService = managementService;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<AccountDto[]> GetAccounts()
         {
-            Account[] accounts = await _managementService.GetAccounts("bdb94046-f01d-4080-a989-341c3e88ed50");
+            Account[] accounts = await _managementService.GetAccounts(User.GetUserId());
             return accounts.Select(x => new AccountDto
                 {
                     Id = x.Id,
@@ -33,6 +31,19 @@ namespace WebApplication4.Api
                     CurrencyName = GetCurrencyFullName(x.CurrencyCharCode),
                 })
                 .ToArray();
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public async Task Create(CreateAccountDto dto)
+        {
+            if (!_managementService.IsSupportCurrencyCharCode(dto.Currency))
+            {
+                throw new InvalidOperationException("Unknown currency code");
+            }
+
+            var account = await _managementService.CreateAccount(User.GetUserId(), dto.Currency);
+            await _managementService.Acquire(account.Id, account.RowVersion, dto.Amount);
         }
 
         private string GetCurrencyFullName(string currencyCharCode)

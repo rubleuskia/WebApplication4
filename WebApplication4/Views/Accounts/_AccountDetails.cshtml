@@ -1,0 +1,13 @@
+﻿@model AccountViewModel
+
+<div class="col-3">
+    <div class="card">
+        <h5 class="card-header">Account (@Model.Id)</h5>
+        <div class="card-body">
+            <h5 class="card-title">@Model.Amount.ToString("F3")</h5>
+            <p class="card-text">@Model.CurrencyName</p>
+            <a asp-action="Acquire" asp-route-id="@Model.Id" class="btn btn-primary">Acquire</a>
+            <a class="btn btn-primary">Withdraw</a>
+        </div>
+    </div>
+</div>

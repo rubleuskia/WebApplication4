@@ -8,4 +8,5 @@ riderModule.iml
 Logs
 appsettings.Personal.json
 **/wwwroot/images/*
+**/wwwroot/node_modules/*
 **/ProtectedStaticFiles/images/*

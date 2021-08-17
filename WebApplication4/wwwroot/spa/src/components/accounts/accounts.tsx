@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { Alert } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import { fetchAccounts } from "../../services/accountService";
 import { AccountDto } from "../../types/accounts";
 import Account from "./account";
-import Header from "./header";
+import { useNavigate } from "react-router-dom";
 
 const Accounts = () => {
     const [accounts, setAccounts] = useState<AccountDto[]>([]);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    useEffect(() => {
+    const loadAccounts = () => {
         fetchAccounts()
             .then((accounts) => {
                 setAccounts(accounts);
@@ -18,6 +19,10 @@ const Accounts = () => {
             .catch((e: Error) => {
                 setError(e.message);
             });
+    }
+
+    useEffect(() => {
+        loadAccounts();
     }, []);
 
     const onDelete = (id: string) => {
@@ -25,10 +30,17 @@ const Accounts = () => {
         setAccounts(filtered);
     }
 
+    const showCreateView = () => {
+        navigate(`/spa/accounts/create`);
+    }
+
     return (
         <>
-            <Header />
+            <p>
+                <Button variant="primary m-1" onClick={showCreateView}>Create</Button>
+            </p>
             <div className="row">
+
                 {error && <Alert variant='danger'>Failed to fetch.</Alert>}
                 {!error && accounts.length === 0 && <Alert variant='warning'>No accounts yet.</Alert>}
                 {accounts.length > 0 && accounts.map((acc) =>
