@@ -1,0 +1,45 @@
+﻿@model Core.Users.Model.UserViewModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Create or update user</h4>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+
+    <form method="post" asp-action="CreateEdit" asp-controller="Users" enctype="multipart/form-data">
+        <div class="modal-body form-horizontal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <fieldset>
+                <div class="mb-3">
+                    <label for="email-input" class="form-label">Name</label>
+                    <input asp-for="Email" type="email" id="email-input" class="form-control" placeholder="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                @if (string.IsNullOrEmpty(Model.Id))
+                {
+                    <div class="mb-3">
+                        <label for="password-input" class="form-label">Password</label>
+                        <input asp-for="Password" type="password" id="password-input" class="form-control" placeholder="Password">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                }
+                <div class="mb-3">
+                    <label for="age-input" class="form-label">Age</label>
+                    <input asp-for="Age" type="text" id="age-input" class="form-control" placeholder="Age">
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="age-input" class="form-label">Photo</label>
+                    <input type="file" asp-for="Photo" class="form-control">
+                </div>
+            </fieldset>
+        </div>
+        <div class="modal-footer">
+            <button data-bs-dismiss="modal" id="cancel" class="btn btn-default" type="button">Cancel</button>
+            <button class="btn btn-success relative" id="btnSubmit" type="submit">
+                <i class="loader"></i>
+                Submit
+            </button>
+        </div>
+    </form>
+</div>

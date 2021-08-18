@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Core.Files;
@@ -63,9 +64,10 @@ namespace Core.Users
             await _unitOfWork.Commit();
         }
 
-        public Task<IdentityResult> Create(CreateUserViewModel model)
+        public Task<IdentityResult> Create(UserViewModel model)
         {
             var user = _mapper.Map<User>(model);
+            user.Id = Guid.NewGuid().ToString();
             return _unitOfWork.Users.Create(user, model.Password);
         }
 

@@ -2,6 +2,7 @@ import Accounts from "./components/accounts/accounts";
 import Acquire from "./components/accounts/acquire";
 import Create from "./components/accounts/create";
 import Layout from "./components/accounts/layout";
+import MainPage from "./components/mainPage";
 
 export const routes = [
     {
@@ -13,5 +14,9 @@ export const routes = [
             { path: 'acquire/:accountId', element: <Acquire /> },
             // { path: 'withdraw/:accountId', element: <Withdraw /> },
         ]
+    },
+    {
+        path: '/spa',
+        element: <MainPage />,
     },
 ];

@@ -9,6 +9,6 @@ namespace Core.Users
         Task<UserViewModel[]> GetViewModels();
         Task<UserViewModel> GetUserViewModel(string id);
         Task Update(UserViewModel model);
-        Task<IdentityResult> Create(CreateUserViewModel model);
+        Task<IdentityResult> Create(UserViewModel model);
     }
 }

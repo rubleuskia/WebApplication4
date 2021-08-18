@@ -1,11 +1,8 @@
-using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using WebApplication4.Extensions;
 using WebApplication4.HostedServices;
@@ -14,12 +11,14 @@ namespace WebApplication4
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             Configuration = configuration;
+            HostEnvironment = hostEnvironment;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment HostEnvironment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -42,7 +41,12 @@ namespace WebApplication4
                         builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                     });
             });
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "wwwroot/spa"; });
+            services.AddSpaStaticFiles(configuration =>
+            {
+                var buildPath = HostEnvironment.IsProduction() ? "/build" : string.Empty;
+                configuration.RootPath = $"{HostEnvironment.WebRootPath}/spa{buildPath}";
+            });
+
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddDirectoryBrowser();
@@ -54,11 +58,8 @@ namespace WebApplication4
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // | => | => | => | =>
-            //   <= | <= |
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,32 +72,16 @@ namespace WebApplication4
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles(); // web application root
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.WebRootPath, "files")),
-                RequestPath = "/MyImages",
-            });
-
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            app.UsePublicFiles(HostEnvironment);
             app.UseRouting();
-
             app.UseCors(WebApplicationConstants.Cors.PolicyName);
-
+            //------------------------
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ProtectedStaticFiles")),
-                RequestPath = "/ProtectedStaticFiles"
-            });
-
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ProtectedStaticFiles")),
-                RequestPath = "/ProtectedImages",
-            });
-
+            //------------------------
+            app.UseProtectedFiles(HostEnvironment);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
@@ -105,15 +90,7 @@ namespace WebApplication4
                     pattern: "MyImages/{fileName}",
                     defaults: new { controller = "Images", action = "Download" });
             });
-
-            app.UseSpa(spa =>
-            {
-                if (env.IsDevelopment())
-                {
-                    spa.Options.SourcePath = $"{env.WebRootPath}/spa";
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            app.UseSpa(HostEnvironment);
         }
     }
 }

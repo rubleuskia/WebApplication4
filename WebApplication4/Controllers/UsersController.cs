@@ -41,47 +41,41 @@ namespace WebApplication4.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> CreateEdit(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                return PartialView("_CreateEdit", new UserViewModel());
+            }
+
             var model = await _userService.GetUserViewModel(id);
-            return model != null ? View(model) : BadRequest();
+            return model != null ? PartialView("_CreateEdit", model) : BadRequest();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(UserViewModel userViewModel)
+        public async Task<IActionResult> CreateEdit(UserViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return PartialView("_CreateEdit", model);
             }
 
-            userViewModel.PhotoPath = await _staticFilesService.SaveProtectedStaticFile(userViewModel.Photo);
-            await _userService.Update(userViewModel);
+            model.PhotoPath = await _staticFilesService.SaveProtectedStaticFile(model.Photo);
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                var result = await _userService.Create(model);
+                if (!result.Succeeded)
+                {
+                    AddIdentityErrors(result);
+                    return PartialView("_CreateEdit", model);
+                }
+            }
+            else
+            {
+                await _userService.Update(model);
+            }
+
             return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateUserViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            var result = await _userService.Create(model);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index");
-            }
-
-            AddIdentityErrors(result);
-            return View(model);
         }
 
         private void AddIdentityErrors(IdentityResult result)
