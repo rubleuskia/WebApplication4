@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -77,12 +75,12 @@ namespace WebApplication4
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            // app.ConfigurePublicStaticFiles(env);
+            app.ConfigurePublicStaticFiles(env);
             app.UseRouting();
             app.UseCors(WebApplicationConstants.Cors.PolicyName);
             app.UseAuthentication();
             app.UseAuthorization();
-            // app.ConfigureProtectedStaticFiles(env);
+            app.ConfigureProtectedStaticFiles(env);
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");

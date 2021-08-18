@@ -17,16 +17,15 @@ namespace Core.Mappings
                 .ForMember(dest => dest.Photo, opt => opt.Ignore());
 
             CreateMap<UserViewModel, User>()
-                .ForMember(dest => dest.DatabasePhoto, opt => opt.MapFrom(x => GetPhotoBinaryData(x.Photo)))
+                .ForMember(dest => dest.DatabasePhoto, opt => {
+                    opt.PreCondition(src => src.Photo != null);
+                    opt.MapFrom(x => GetPhotoBinaryData(x.Photo));
+                })
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(x => x.Email))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(x => x.Age ?? 0))
                 .ForMember(dest => dest.PhotoId, opt => opt.Ignore())
                 .ForMember(dest => dest.Accounts, opt => opt.Ignore())
                 .ForMember(dest => dest.Photo, opt => opt.Ignore());
-
-            CreateMap<CreateUserViewModel, User>()
-                .ForMember(dest => dest.Age, opt => opt.MapFrom(x => x.Age ?? 0))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(x => x.Email));
         }
 
         // move to utils

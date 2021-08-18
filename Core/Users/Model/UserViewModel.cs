@@ -10,6 +10,8 @@ namespace Core.Users.Model
         [Required]
         public string Email { get; set; }
 
+        public string Password { get; set; }
+
         [Required]
         [Range(1, 100)]
         public int? Age { get; set; }

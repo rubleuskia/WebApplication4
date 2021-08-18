@@ -1,49 +1,56 @@
 @model Core.Users.Model.UserViewModel[];
 
 <main>
-<section class="py-5 text-center container">
-  <div class="row py-lg-5">
-    <div class="col-lg-6 col-md-8 mx-auto">
-      <h1 class="fw-light">Users album</h1>
-      <p class="lead text-muted">Our first MVC application</p>
-      <p>
-        <a asp-action="Create" asp-route-id="0" class="btn btn-primary my-2">Create new user</a>
-      </p>
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Users album</h1>
+        <p class="lead text-muted">Our first MVC application</p>
+        <p>
+          <a class="btn btn-primary popup" data-url="users/createedit" data-toggle="modal" data-target="#modal-create-edit-user" id="UserModel">Create New User</a>
+          @await Html.PartialAsync("_Modal")
+        </p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="album py-5 bg-light">
-  <div class="container">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-      @foreach (var user in Model)
-      {
-        <div class="col">
-          <div class="card shadow-sm">
-            @if (string.IsNullOrEmpty(user.PhotoBase64))
-            {
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        @foreach (var user in Model)
+        {
+          <div class="col">
+            <div class="card shadow-sm">
+              @if (string.IsNullOrEmpty(user.PhotoBase64))
+              {
                 <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-            }
-            else
-            {
+              }
+              else
+              {
                 @* <img src="@Url.Content(user.PhotoPath)" class="img-thumbnail" alt="No image"/> *@
                 <img src="@user.PhotoBase64" class="img-thumbnail" alt="No image"/>
-            }
+              }
 
-            <div class="card-body">
-              <p class="card-text">User name: @user.Email</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary">View</a>
-                  <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <div class="card-body">
+                <p class="card-text">User name: @user.Email</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary">View</a>
+                    <a data-url="users/createedit/@user.Id" data-toggle="modal" data-target="#modal-create-edit-user" class="btn btn-sm btn-outline-secondary popup">Edit</a>
+                  </div>
+                  <small class="text-muted">@user.Id</small>
                 </div>
-                <small class="text-muted">@user.Id</small>
               </div>
             </div>
           </div>
-        </div>
-      }
+        }
+      </div>
     </div>
   </div>
-</div>
 </main>
+
+@section Scripts
+{
+  <script src="~/js/user.js" asp-append-version="true"></script>
+  @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
