@@ -28,6 +28,7 @@ namespace WebApplication4
             services.AddHttpContextAccessor();
             services.AddHostedService<TelegramHostedService>();
             services.RegisterAutoMapper();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/UserAccount/Login";
@@ -43,7 +44,7 @@ namespace WebApplication4
             });
             services.AddSpaStaticFiles(configuration =>
             {
-                var buildPath = HostEnvironment.IsProduction() ? "/build" : string.Empty;
+                var buildPath = HostEnvironment.IsProduction() ? "/dist" : string.Empty;
                 configuration.RootPath = $"{HostEnvironment.WebRootPath}/spa{buildPath}";
             });
 
@@ -72,6 +73,7 @@ namespace WebApplication4
             }
 
             app.UseHttpsRedirection();
+            app.UseCustomRequestLocalization();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UsePublicFiles(HostEnvironment);

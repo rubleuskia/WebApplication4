@@ -25,4 +25,28 @@
       <Folder Include="wwwroot\files" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Controllers.UsersController.ru.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Controllers.UsersController.ru.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Controllers.UsersController.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Controllers.UsersController.ru.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\Controllers.UsersController.ru.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Controllers.UsersController.ru.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Controllers.UsersController.de.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Controllers.UsersController.de.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

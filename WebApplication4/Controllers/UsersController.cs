@@ -4,6 +4,7 @@ using Core.Users.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using WebApplication4.Services;
 
 namespace WebApplication4.Controllers
@@ -13,16 +14,19 @@ namespace WebApplication4.Controllers
     {
         private readonly IUserService _userService;
         private readonly IStaticFilesService _staticFilesService;
+        private readonly IStringLocalizer<UsersController> _localizer;
 
-        public UsersController(IUserService userService, IStaticFilesService staticFilesService)
+        public UsersController(IUserService userService, IStaticFilesService staticFilesService, IStringLocalizer<UsersController> localizer)
         {
             _userService = userService;
             _staticFilesService = staticFilesService;
+            _localizer = localizer;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var localized = _localizer["test"];
             return View(await _userService.GetViewModels());
         }
 
