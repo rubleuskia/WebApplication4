@@ -1,0 +1,13 @@
+<!-- Resources -->
+<h2>Accounts page</h2>
+
+<div class="create-account">
+  <button mat-fab color="accent" aria-label="Example icon button with a bookmark icon" (click)="createAccount()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+<div class="card-container">
+  <account-card *ngFor="let account of accounts" [account]="account">
+  </account-card>
+</div>

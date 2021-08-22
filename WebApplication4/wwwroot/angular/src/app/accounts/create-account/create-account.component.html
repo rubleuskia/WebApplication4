@@ -1,0 +1,26 @@
+<div class="create-account-form">
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <p>
+      <mat-form-field appearance="outline">
+        <mat-label>Amount</mat-label>
+        <input [(ngModel)]="account.amount" matInput required placeholder="Initial amount" #amount="ngModel"
+          name="amount">
+        <mat-icon matSuffix>attach_money</mat-icon>
+        <mat-hint>Entrer initial amount</mat-hint>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Curency</mat-label>
+        <mat-select required [(ngModel)]="account.currency" name="currency">
+          <mat-option *ngFor="let currency of currencies" [value]="currency.value">
+            {{currency.text}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <p>
+      <button mat-raised-button [disabled]="!form.form.valid">Create</button>
+    </p>
+  </form>
+</div>
