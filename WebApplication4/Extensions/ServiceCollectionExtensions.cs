@@ -20,6 +20,7 @@ using DatabaseAccess.Infrastructure.Repositories.Common;
 using DatabaseAccess.Infrastructure.Repositories.Users;
 using DatabaseAccess.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +39,7 @@ namespace WebApplication4.Extensions
         public static void RegisterEntityFramework(this IServiceCollection services, IConfiguration configuration)
         {
             string connection = configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(PrepareSqlConnection()));
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddTransient<IBeforeCommitHandler, CreateEntityBeforeCommitHandler>();
@@ -49,6 +50,19 @@ namespace WebApplication4.Extensions
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IAccountsRepository, AccountsRepository>();
+        }
+
+        private static SqlConnection PrepareSqlConnection()
+        {
+            var builder = new SqlConnectionStringBuilder
+            {
+                DataSource = "localhost",
+                UserID = "sa",
+                Password = "MyPass@word",
+                InitialCatalog = "WebAppDatabase"
+            };
+
+            return new SqlConnection(builder.ConnectionString);
         }
 
         public static void RegisterOptions(this IServiceCollection services, IConfiguration configuration)
