@@ -45,7 +45,7 @@ namespace WebApplication4
             services.AddSpaStaticFiles(configuration =>
             {
                 var buildPath = HostEnvironment.IsProduction() ? "/dist" : string.Empty;
-                configuration.RootPath = $"{HostEnvironment.WebRootPath}/spa{buildPath}";
+                configuration.RootPath = $"{HostEnvironment.WebRootPath}/angular{buildPath}";
             });
 
             services.AddControllersWithViews();
