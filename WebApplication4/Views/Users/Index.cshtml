@@ -36,12 +36,12 @@
             }
 
             <div class="card-body">
-              <p class="card-text">User name: @user.Email</p>
+              <p class="card-text">@_localizer["Common_Username"]: @user.Email</p>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-secondary">View</a>
                   <a class="btn btn-sm btn-outline-secondary popup" data-url="Users/CreateEdit/@user.Id" data-toggle="modal" data-target="#modal-create-edit-user">
-                    Edit
+                    @_localizer["Common_Edit"]
                   </a>
                 </div>
                 <small class="text-muted">@user.Id</small>

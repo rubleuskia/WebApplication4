@@ -14,9 +14,9 @@ namespace WebApplication4.Controllers
     {
         private readonly IUserService _userService;
         private readonly IStaticFilesService _staticFilesService;
-        private readonly IStringLocalizer<UsersController> _localizer;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public UsersController(IUserService userService, IStaticFilesService staticFilesService, IStringLocalizer<UsersController> localizer)
+        public UsersController(IUserService userService, IStaticFilesService staticFilesService, IStringLocalizer<SharedResource> localizer)
         {
             _userService = userService;
             _staticFilesService = staticFilesService;
@@ -26,7 +26,7 @@ namespace WebApplication4.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var localized = _localizer["test"];
+            var localized = _localizer["shared_test"];
             return View(await _userService.GetViewModels());
         }
 
