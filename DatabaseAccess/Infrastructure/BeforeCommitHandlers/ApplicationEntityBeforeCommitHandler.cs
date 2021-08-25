@@ -18,7 +18,7 @@ namespace DatabaseAccess.Infrastructure.BeforeCommitHandlers
 
         public Task Execute(ApplicationContext context)
         {
-            var userId = _httpContextAccessor.HttpContext.User.Claims
+            var userId = _httpContextAccessor.HttpContext?.User.Claims
                 .Single(x => x.Type == ClaimTypes.NameIdentifier)
                 .Value;
 

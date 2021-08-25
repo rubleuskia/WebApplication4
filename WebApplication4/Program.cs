@@ -1,5 +1,11 @@
+using System;
+using System.Threading.Tasks;
+using DatabaseAccess;
+using DatabaseAccess.Infrastructure.Initializers;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -7,18 +13,22 @@ namespace WebApplication4
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.File("Logs/logs.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            await SeedDatabase(host);
+
+            await host.RunAsync();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        private static IWebHostBuilder CreateHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, builder) =>
                 {
                     IHostEnvironment env = context.HostingEnvironment;
@@ -28,9 +38,24 @@ namespace WebApplication4
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
                         .AddJsonFile("appsettings.Personal.json", true, true);
                 })
-                .ConfigureWebHostDefaults(webBuilder =>
+                .UseStartup<Startup>();
+
+        private static async Task SeedDatabase(IWebHost host)
+        {
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            try
+            {
+                var context = services.GetRequiredService<ApplicationContext>();
+                foreach (var initializer in services.GetServices<IDatabaseInitializer>())
                 {
-                    webBuilder.UseStartup<Startup>();
-                });
+                    await initializer.Execute(context);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Cannot initialize database.");
+            }
+        }
     }
 }

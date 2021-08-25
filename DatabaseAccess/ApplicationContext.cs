@@ -21,6 +21,8 @@ namespace DatabaseAccess
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<FileModel> Files { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<CityInfo> CityInfos { get; set; }
+        public DbSet<WeatherInfo> WeatherInfo { get; set; }
 
         public ApplicationContext(
             IServiceProvider serviceProvider,
