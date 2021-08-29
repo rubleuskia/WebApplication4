@@ -24,7 +24,7 @@ namespace WebApplication4
         {
             services.RegisterDependencies(Configuration);
             services.RegisterOptions(Configuration);
-            services.RegisterEntityFramework(Configuration);
+            // services.RegisterEntityFramework(Configuration);
             services.AddHttpContextAccessor();
             services.AddHostedService<TelegramHostedService>();
             services.RegisterAutoMapper();
