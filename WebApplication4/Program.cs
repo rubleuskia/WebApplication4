@@ -20,14 +20,14 @@ namespace WebApplication4
                 .WriteTo.File("Logs/logs.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            var host = CreateHostBuilder(args).Build();
+            var host = CreateWebHostBuilder(args).Build();
 
             await SeedDatabase(host);
 
             await host.RunAsync();
         }
 
-        private static IWebHostBuilder CreateHostBuilder(string[] args) =>
+        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((context, builder) =>
                 {

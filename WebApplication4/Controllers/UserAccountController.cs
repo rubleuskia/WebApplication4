@@ -26,7 +26,7 @@ namespace WebApplication4.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login([FromForm]LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {

@@ -1,4 +1,13 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3d975810_002D3543_002D4db6_002D9f5d_002D4391eac5eb6f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Accounts_Index_ReturnsAccountsPage" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::E6BDAC22-7AC3-4D7E-B386-6D4DE3B742BC::net5.0::WebApp.Tests.Integration.Accounts.AccountsTests.Accounts_Index_ReturnsAccountsPage&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::E6BDAC22-7AC3-4D7E-B386-6D4DE3B742BC::net5.0::WebApp.Tests.Integration.Accounts.AccountApiTests.CreateAccount_Always_ReturnsNewAccount&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6d639c7d_002D03f4_002D4150_002Db04e_002D07a96efa1fe5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetAccounts_Always_ReturnsAccounts" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;ProjectFolder&gt;E6BDAC22-7AC3-4D7E-B386-6D4DE3B742BC/d:Integration/d:Accounts&lt;/ProjectFolder&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=WebApplication4_002FResources_002FControllers_002EUsersController/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=WebApplication4_002FResources_002FSharedResource/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>
