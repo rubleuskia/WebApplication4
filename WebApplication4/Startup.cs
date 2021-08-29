@@ -49,7 +49,11 @@ namespace WebApplication4
             });
 
             services.AddControllersWithViews();
-            services.AddRazorPages().AddRazorRuntimeCompilation();
+            if (HostEnvironment.IsDevelopment())
+            {
+                services.AddRazorPages().AddRazorRuntimeCompilation();
+            }
+
             services.AddDirectoryBrowser();
             services.AddAuthorization(options =>
             {

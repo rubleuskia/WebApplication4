@@ -67,4 +67,9 @@
       </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="ProtectedStaticFiles\.gitkeep" />
+      <Content Include="ProtectedStaticFiles\.gitkeep" />
+    </ItemGroup>
+
 </Project>
