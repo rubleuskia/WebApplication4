@@ -8,4 +8,12 @@ import { AccountDto } from 'src/types/account';
 })
 export class AccountCardComponent {
   @Input() account: AccountDto;
+
+  public handleAcquire(id: string) {
+    console.log("Acquire: " + id);
+  }
+
+  public handleWithdraw(id: string) {
+    console.log("Withdraw: " + id);
+  }
 }

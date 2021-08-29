@@ -17,7 +17,7 @@ const Account = (props: Props) => {
                 <Card.Body>
                     <Card.Title>Account ({account.id})</Card.Title>
                     <Card.Text>
-                        <h5 className="card-title">{account.amount}</h5>
+                        <span className="card-title" data-testid="amount-field">{account.amount}</span>
                         {account.currencyName}
                     </Card.Text>
                     <Link className="btn btn-primary m-1" to={`acquire/${account.id}`} state={account}>Acquire</Link>

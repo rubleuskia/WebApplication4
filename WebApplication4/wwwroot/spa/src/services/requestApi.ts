@@ -18,10 +18,10 @@ const request = async <T extends unknown>(
     options?: RequestOptions,
 ) => {
     let response: Response;
+
     try {
         response = await fetch(baseApiRoute + url, {
             body: getBody(options),
-            // @ts-ignore
             headers: {
                 Accept: "application/json",
                 ...getContentTypeHeader(options),

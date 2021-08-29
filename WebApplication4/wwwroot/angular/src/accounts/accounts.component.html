@@ -1,5 +1,14 @@
 <p>Accounts page</p>
 
+<div class="button-container">
+  <button
+    mat-fab
+    color="primary"
+    aria-label="Example icon button with a delete icon"
+  >
+    <mat-icon (click)="createAccount()">add</mat-icon>
+  </button>
+</div>
 <div class="card-container">
   <account-card *ngFor="let account of accounts" [account]="account">
   </account-card>

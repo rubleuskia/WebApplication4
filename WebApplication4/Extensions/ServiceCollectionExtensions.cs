@@ -15,6 +15,8 @@ using Core.Users;
 using DatabaseAccess;
 using DatabaseAccess.Entities;
 using DatabaseAccess.Infrastructure.BeforeCommitHandlers;
+using DatabaseAccess.Infrastructure.Initializers;
+using DatabaseAccess.Infrastructure.Initializers.CityInfos;
 using DatabaseAccess.Infrastructure.Repositories.Accounts;
 using DatabaseAccess.Infrastructure.Repositories.Common;
 using DatabaseAccess.Infrastructure.Repositories.Users;
@@ -74,6 +76,8 @@ namespace WebApplication4.Extensions
             services.AddSingleton<GetNowAtSite>(() => DateTime.UtcNow);
 
             services.AddTransient<IStaticFilesService, StaticFilesService>();
+
+            services.AddTransient<IDatabaseInitializer, CityInfoDatabaseInitializer>();
 
             RegisterCurrenciesApi(services, configuration);
         }
