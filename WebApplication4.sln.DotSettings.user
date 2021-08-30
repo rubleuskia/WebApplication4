@@ -1,4 +1,26 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=065a30bf_002D3c86_002D4a2a_002D98f9_002D88813f0fcf7c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="GetAccounts_EmptyDatabase_ReturnsEmptyAccountsList" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::844E19B6-3744-429F-8B3A-42EB278833DB::net5.0::WebApplication.Tests.Integration.Accounts.AccountsApiTests.GetAccounts_EmptyDatabase_ReturnsEmptyAccountsList&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=17b3fbeb_002De9b9_002D4910_002D93b0_002D57a452f97a7b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="GetAccounts_EmptyDatabase_ReturnsEmptyAccountsList #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::844E19B6-3744-429F-8B3A-42EB278833DB::net5.0::WebApplication.Tests.Integration.Accounts.AccountsApiTests.GetAccounts_EmptyDatabase_ReturnsEmptyAccountsList&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::844E19B6-3744-429F-8B3A-42EB278833DB::net5.0::WebApplication.Tests.Integration.Accounts.AccountsApiTests.GetAccounts_AccountCreated_ReturnsExpectedAccount&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2be230a9_002D728e_002D4e48_002D8ec4_002Db978250f4969/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Accounts_Index_ReturnsAccountsListView" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::844E19B6-3744-429F-8B3A-42EB278833DB::net5.0::WebApplication.Tests.Integration.Accounts.AccountsTests.Accounts_Index_ReturnsAccountsListView&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::844E19B6-3744-429F-8B3A-42EB278833DB::net5.0::WebApplication.Tests.Integration.Accounts.AccountsApiTests.GetAccounts_EmptyDatabase_ReturnsEmptyAccountsList&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestRunner/HangingTestRunnerResponse/@EntryValue">KillProcess</s:String>
+	
+	
+	
+	
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=WebApplication4_002FResources_002FControllers_002EUsersController/@EntryIndexedValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=WebApplication4_002FResources_002FSharedResource/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>

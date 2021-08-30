@@ -35,7 +35,7 @@ namespace WebApplication4.Api
 
         [HttpPost]
         [Route("create")]
-        public async Task Create(CreateAccountDto dto)
+        public async Task<Guid> Create(CreateAccountDto dto)
         {
             if (!_managementService.IsSupportCurrencyCharCode(dto.Currency))
             {
@@ -44,6 +44,7 @@ namespace WebApplication4.Api
 
             var account = await _managementService.CreateAccount(User.GetUserId(), dto.Currency);
             await _managementService.Acquire(account.Id, account.RowVersion, dto.Amount);
+            return account.Id;
         }
 
         private string GetCurrencyFullName(string currencyCharCode)
