@@ -3,6 +3,7 @@
 <div class="container">
     <div class="row">
         <form method="post" asp-action="Register">
+            <input type="hidden" asp-for="Age" id="ageInputValue"/>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <fieldset>
                 <legend>Register:</legend>
@@ -22,17 +23,25 @@
                     <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
-                    <label for="age-input" class="form-label">Age</label>
-                    <input asp-for="Age" type="text" id="age-input" class="form-control" placeholder="Age">
+                    <label for="age-input" class="form-label" >Age</label>
+                    <input type="text" id="age-input" class="form-control" placeholder="Age" data-url="/UserAccount/AutoCompleteAge">
                     <span asp-validation-for="Age" class="text-danger"></span>
                 </div>
+                <div class="mb-3">
+                    <label for="city-input" class="form-label">City</label>
+                    <input type="text" id="city-input" class="form-control" placeholder="City" data-url="/UserAccount/AutoCompleteCity">
+                </div>
             </fieldset>
-            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="submit" value="Save" class="btn btn-primary"/>
         </form>
     </div>
 </div>
 @section Scripts
 {
+    <script>
+        window.autocomplete.init("#age-input", "#ageInputValue");
+        window.autocomplete.init("#city-input");
+    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

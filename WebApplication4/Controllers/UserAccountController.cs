@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using DatabaseAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -87,6 +88,28 @@ namespace WebApplication4.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult AutoCompleteAge(string prefix)
+        {
+            var ageResults = Enumerable.Range(1, 100)
+                .Where(age => age.ToString().StartsWith(prefix ?? ""))
+                .Select(age => new { label = $"{age} year(s)", val = age, })
+                .ToList();
+
+            return Json(ageResults);
+        }
+
+        [HttpPost]
+        public JsonResult AutoCompleteCity(string prefix)
+        {
+            var ageResults = Enumerable.Range(200, 20)
+                .Where(age => age.ToString().StartsWith(prefix ?? ""))
+                .Select(age => new { label = $"{age} year(s)", val = age, })
+                .ToList();
+
+            return Json(ageResults);
         }
     }
 }
