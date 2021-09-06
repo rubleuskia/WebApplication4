@@ -24,11 +24,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="HttpClientHelper" />
+      <ProjectReference Include="..\WebApplication4\WebApplication4.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebApplication4\WebApplication4.csproj" />
+      <Content Include="appsettings.Tests.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

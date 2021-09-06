@@ -1,7 +1,5 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AngleSharp.Dom;
-using FluentAssertions;
 using WebApplication.Tests.Integration.Infrastructure;
 using Xunit;
 
@@ -9,28 +7,27 @@ namespace WebApplication.Tests.Integration.Accounts
 {
     public class AccountsTests : IClassFixture<WebAppWebApplicationFactory>
     {
-        private readonly WebAppWebApplicationFactory _factory;
+        private readonly AccountsFacade _facade;
 
         public AccountsTests(WebAppWebApplicationFactory factory)
         {
-            _factory = factory;
+            _facade = new AccountsFacade(factory);
         }
 
         [Fact]
         public async Task Accounts_Index_ReturnsAccountsListView()
         {
             // arrange
-            HttpClient client = _factory.CreateClient();
-            await client.Authenticate();
+            var accountId1 = await _facade.CreateAccount(100500, "USD");
+            var accountId2 = await _facade.CreateAccount(500100, "EUR");
 
             // act
-            HttpResponseMessage response = await client.GetAsync("/accounts/index");
+            var document = await _facade.GetMvcAccounts();
 
             // assert
-            response.EnsureSuccessStatusCode();
-            IDocument document = await HtmlHelper.GetHtmlDocument(response);
             IHtmlCollection<IElement> cards = document.QuerySelectorAll(".card");
-            cards.Should().BeEmpty();
+            HtmlHelper.AssertAccountCard(cards, accountId1, "US dollar (USD)", "100500,000");
+            HtmlHelper.AssertAccountCard(cards, accountId2, "Euro (EUR)", "500100,000");
         }
     }
 }

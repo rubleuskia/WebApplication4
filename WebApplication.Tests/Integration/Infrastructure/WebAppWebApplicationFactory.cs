@@ -4,6 +4,7 @@ using DatabaseAccess;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WebApplication4;
@@ -24,7 +25,8 @@ namespace WebApplication.Tests.Integration.Infrastructure
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    options.UseInMemoryDatabase("InMemoryDbForTesting");
+                    var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.Tests.json").Build();
+                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
                 });
 
                 var sp = services.BuildServiceProvider();
