@@ -17,6 +17,7 @@ namespace WebApplication4
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
+                .WriteTo.Console()
                 .WriteTo.File("Logs/logs.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
