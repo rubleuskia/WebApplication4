@@ -3,6 +3,7 @@
 bin/
 obj/
 /packages/
+/deploy/
 riderModule.iml
 /_ReSharper.Caches/
 Logs

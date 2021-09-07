@@ -44,7 +44,7 @@ namespace WebApplication4.Extensions
                 builder.MapWhen(ctx => ctx.Request.Path.StartsWithSegments("/angular"),
                     app =>
                     {
-                        app.UseSpa(spa => { spa.Options.SourcePath = $"{env.WebRootPath}/spa/dist"; });
+                        app.UseSpa(spa => { spa.Options.SourcePath = $"{env.WebRootPath}/angular/dist"; });
                     });
             }
         }
@@ -60,6 +60,11 @@ namespace WebApplication4.Extensions
 
         public static void UseProtectedFiles(this IApplicationBuilder builder, IWebHostEnvironment env)
         {
+            if (!Directory.Exists("ProtectedStaticFiles"))
+            {
+                Directory.CreateDirectory("ProtectedStaticFiles");
+            }
+
             builder.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ProtectedStaticFiles")),
