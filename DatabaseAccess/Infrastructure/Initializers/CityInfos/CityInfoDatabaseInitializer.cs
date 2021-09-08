@@ -36,8 +36,8 @@ namespace DatabaseAccess.Infrastructure.Initializers.CityInfos
                 Name = x.Name,
             });
 
-            await context.CityInfos.AddRangeAsync(entities);
-            await context.SaveChangesAsync();
+            // await context.CityInfos.AddRangeAsync(entities);
+            // await context.SaveChangesAsync();
         }
     }
 }

@@ -4,6 +4,7 @@ using DatabaseAccess;
 using DatabaseAccess.Infrastructure.Initializers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -59,6 +60,7 @@ namespace WebApplication4
             try
             {
                 var context = services.GetRequiredService<ApplicationContext>();
+                await context.Database.MigrateAsync();
                 foreach (var initializer in services.GetServices<IDatabaseInitializer>())
                 {
                     await initializer.Execute(context);
