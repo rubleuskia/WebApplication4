@@ -17,17 +17,9 @@ namespace WebApplication.Tests.Integration.Infrastructure
         {
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType ==
-                         typeof(DbContextOptions<ApplicationContext>));
-
+                var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationContext>));
                 services.Remove(descriptor);
-
-                services.AddDbContext<ApplicationContext>(options =>
-                {
-                    var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.Tests.json").Build();
-                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-                });
+                services.AddDbContext<ApplicationContext>(ConfigureDatabaseAccess);
 
                 var sp = services.BuildServiceProvider();
                 using var scope = sp.CreateScope();
@@ -48,6 +40,26 @@ namespace WebApplication.Tests.Integration.Infrastructure
                                         "database with test messages. Error: {Message}", ex.Message);
                 }
             });
+        }
+
+        private static void ConfigureDatabaseAccess(DbContextOptionsBuilder options)
+        {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.Tests.json")
+                .AddEnvironmentVariables()
+                .Build();
+
+            var strategy = configuration["IntegrationTestsDatabaseStrategy"];
+            if (strategy == "TestDatabase")
+            {
+                Console.WriteLine("Configuring test database for integration tests.");
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            }
+            else
+            {
+                Console.WriteLine("Configuring in-memory database for integration tests.");
+                options.UseInMemoryDatabase("InMemoryDatabase");
+            }
         }
     }
 }
