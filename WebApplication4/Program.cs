@@ -51,6 +51,7 @@ namespace WebApplication4
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
                         .AddJsonFile("appsettings.Personal.json", true, true);
                 })
+                .UseUrls("http://0.0.0.0:" + Environment.GetEnvironmentVariable("PORT"))
                 .UseStartup<Startup>();
 
         private static async Task SeedDatabase(IWebHost host)
@@ -60,6 +61,7 @@ namespace WebApplication4
             try
             {
                 var context = services.GetRequiredService<ApplicationContext>();
+                await context.Database.EnsureCreatedAsync();
                 await context.Database.MigrateAsync();
                 foreach (var initializer in services.GetServices<IDatabaseInitializer>())
                 {
