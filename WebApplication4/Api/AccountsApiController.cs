@@ -43,6 +43,7 @@ namespace WebApplication4.Api
             }
 
             var account = await _managementService.CreateAccount(User.GetUserId(), dto.Currency);
+            await _managementService.Acquire(account.Id, account.RowVersion, dto.Amount);
             return account.Id;
         }
 
