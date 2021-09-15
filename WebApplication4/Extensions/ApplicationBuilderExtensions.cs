@@ -60,20 +60,21 @@ namespace WebApplication4.Extensions
 
         public static void UseProtectedFiles(this IApplicationBuilder builder, IWebHostEnvironment env)
         {
-            if (!Directory.Exists("ProtectedStaticFiles"))
+            var path = Path.Combine(env.ContentRootPath, "ProtectedStaticFiles");
+            if (!Directory.Exists(path))
             {
-                Directory.CreateDirectory("ProtectedStaticFiles");
+                Directory.CreateDirectory(path);
             }
 
             builder.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ProtectedStaticFiles")),
+                FileProvider = new PhysicalFileProvider(path),
                 RequestPath = "/ProtectedStaticFiles"
             });
 
             builder.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(env.ContentRootPath, "ProtectedStaticFiles")),
+                FileProvider = new PhysicalFileProvider(path),
                 RequestPath = "/ProtectedImages",
             });
         }
