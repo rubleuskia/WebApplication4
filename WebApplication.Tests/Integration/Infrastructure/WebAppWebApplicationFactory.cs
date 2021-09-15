@@ -25,8 +25,20 @@ namespace WebApplication.Tests.Integration.Infrastructure
 
                 services.AddDbContext<ApplicationContext>(options =>
                 {
-                    var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.Tests.json").Build();
-                    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                    var configuration = new ConfigurationBuilder()
+                        .AddJsonFile("appsettings.Tests.json")
+                        .AddEnvironmentVariables()
+                        .Build();
+
+                    var strategy = configuration["IntegrationTestsDatabaseStrategy"];
+                    if (strategy == "InMemory")
+                    {
+                        options.UseInMemoryDatabase("InMemoryDatabase");
+                    }
+                    else
+                    {
+                        options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                    }
                 });
 
                 var sp = services.BuildServiceProvider();
