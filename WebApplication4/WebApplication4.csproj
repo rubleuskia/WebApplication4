@@ -76,7 +76,6 @@
    </ItemGroup>
 
    <Target Name="PublishAngular" AfterTargets="ComputeFilesToPublish">
-   <Exec Command="dotnet ef database update" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
 
