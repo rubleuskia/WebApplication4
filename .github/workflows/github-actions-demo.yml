@@ -37,4 +37,22 @@ jobs:
           node-version: 15.x
       - name: Install dependencies
         run: npm ci
+      - run: npm run build-custom
+      - run: npm test
+
+  build-angular:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: WebApplication4/wwwroot/angular
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 15.x
+      - name: Install dependencies
+        run: npm ci
       - run: npm run build
+      - run: npm run test -- --no-watch --no-progress
