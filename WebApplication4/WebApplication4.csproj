@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-<!--        <SpaRoot>wwwroot\angular\</SpaRoot>-->
+       <SpaRoot>wwwroot\angular\</SpaRoot>
     </PropertyGroup>
 
     <ItemGroup>
@@ -69,25 +69,24 @@
       </Compile>
     </ItemGroup>
 
-<!--    <ItemGroup>-->
-<!--        <Content Remove="$(SpaRoot)**" />-->
-<!--        <None Remove="$(SpaRoot)**" />-->
-<!--        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />-->
-<!--    </ItemGroup>-->
+   <ItemGroup>
+       <Content Remove="$(SpaRoot)**" />
+       <None Remove="$(SpaRoot)**" />
+       <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+   </ItemGroup>
 
-<!--    <Target Name="PublishAngular" AfterTargets="ComputeFilesToPublish">-->
-<!--&lt;!&ndash;        <Exec Command="dotnet ef database update" />&ndash;&gt;-->
-<!--        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />-->
-<!--        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />-->
+   <Target Name="PublishAngular" AfterTargets="ComputeFilesToPublish">
+       <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+       <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
 
-<!--        <ItemGroup>-->
-<!--            <DistFiles Include="$(SpaRoot)dist\**;" />-->
-<!--            <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">-->
-<!--                <RelativePath>%(DistFiles.Identity)</RelativePath>-->
-<!--                <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>-->
-<!--                <ExcludeFromSingleFile>true</ExcludeFromSingleFile>-->
-<!--            </ResolvedFileToPublish>-->
-<!--        </ItemGroup>-->
-<!--    </Target>-->
+       <ItemGroup>
+           <DistFiles Include="$(SpaRoot)dist\**;" />
+           <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+               <RelativePath>%(DistFiles.Identity)</RelativePath>
+               <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+               <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+           </ResolvedFileToPublish>
+       </ItemGroup>
+   </Target>
 
 </Project>

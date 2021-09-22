@@ -26,7 +26,7 @@ namespace WebApplication4
             {
                 Log.Information("Starting web host");
                 var host = CreateWebHostBuilder(args).Build();
-                await SeedDatabase(host);
+                // await SeedDatabase(host);
                 await host.RunAsync();
             }
             catch (Exception ex)
