@@ -1,24 +1,6 @@
 name: WebApp4 CI
 on: [pull_request]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core SDK '5.0.x'
-        uses: actions/setup-dotnet@v1.7.2
-        with:
-          dotnet-version: '5.0.x'
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test RUB API
-        env:
-          IntegrationTestsDatabaseStrategy: InMemory
-          CurrencyApi: RUB
-        run: dotnet test --no-restore --verbosity normal
-
   build-react:
     runs-on: ubuntu-latest
     defaults:
@@ -36,7 +18,7 @@ jobs:
       - run: npm test
 
   deploy:
-    needs: [build-react, build]
+    needs: [build-react]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
