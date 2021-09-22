@@ -4,6 +4,7 @@ using DatabaseAccess;
 using DatabaseAccess.Infrastructure.Initializers;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,7 +26,7 @@ namespace WebApplication4
             {
                 Log.Information("Starting web host");
                 var host = CreateWebHostBuilder(args).Build();
-                await SeedDatabase(host);
+                // await SeedDatabase(host);
                 await host.RunAsync();
             }
             catch (Exception ex)
@@ -50,6 +51,7 @@ namespace WebApplication4
                         .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
                         .AddJsonFile("appsettings.Personal.json", true, true);
                 })
+                .UseUrls("http://0.0.0.0:" + Environment.GetEnvironmentVariable("PORT"))
                 .UseStartup<Startup>();
 
         private static async Task SeedDatabase(IWebHost host)
@@ -59,6 +61,8 @@ namespace WebApplication4
             try
             {
                 var context = services.GetRequiredService<ApplicationContext>();
+                await context.Database.EnsureCreatedAsync();
+                await context.Database.MigrateAsync();
                 foreach (var initializer in services.GetServices<IDatabaseInitializer>())
                 {
                     await initializer.Execute(context);

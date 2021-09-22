@@ -84,8 +84,8 @@ namespace WebApplication4
             app.UseRouting();
             app.UseCors(WebApplicationConstants.Cors.PolicyName);
             //------------------------
-            app.UseAuthentication();
-            app.UseAuthorization();
+            // app.UseAuthentication();
+            // app.UseAuthorization();
             //------------------------
             app.UseProtectedFiles(HostEnvironment);
             app.UseEndpoints(endpoints =>
